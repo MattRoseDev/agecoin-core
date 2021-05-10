@@ -7,8 +7,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/favecode/agecoin-core/graph"
 	"github.com/favecode/agecoin-core/graph/generated"
+	graph "github.com/favecode/agecoin-core/graph/resolver"
 )
 
 const defaultPort = "8080"
