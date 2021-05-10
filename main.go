@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/favecode/agecoin-core/database"
 	"github.com/favecode/agecoin-core/graph/generated"
 	graph "github.com/favecode/agecoin-core/graph/resolver"
 )
@@ -14,6 +15,10 @@ import (
 const defaultPort = "8080"
 
 func main() {
+	DB := database.New()
+
+	defer DB.Close()
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
