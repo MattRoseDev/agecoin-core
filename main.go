@@ -5,14 +5,26 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/99designs/gqlgen/handler"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/joho/godotenv"
+	"github.com/rs/cors"
+
 	"github.com/favecode/agecoin-core/database"
 	"github.com/favecode/agecoin-core/graph/generated"
 	graph "github.com/favecode/agecoin-core/graph/resolver"
+	"github.com/favecode/agecoin-core/service"
 )
 
 const defaultPort = "8080"
+
+func init() {
+	err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Error loading .env file")
+  }
+}
 
 func main() {
 	DB := database.New()
@@ -23,11 +35,26 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+	router := chi.NewRouter()
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	user := database.User{DB: DB}
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8000"},
+		AllowCredentials: true,
+		Debug:            true,
+	}).Handler)
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
+
+	s := service.New(service.Service{User: user})
+
+	c := generated.Config{Resolvers: &graph.Resolver{Service: s}}
+	queryHandler := handler.GraphQL(generated.NewExecutableSchema(c))
+
+
+	router.Handle("/", handler.Playground("GraphQL playground", "/query"))
+	router.Handle("/query", queryHandler)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
