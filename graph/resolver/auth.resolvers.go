@@ -15,5 +15,6 @@ func (r *mutationResolver) Register(ctx context.Context, input model.RegisterInp
 }
 
 func (r *queryResolver) Login(ctx context.Context, input model.LoginInput) (*model.AuthResponse, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.Service.Login(ctx, input)
+
 }

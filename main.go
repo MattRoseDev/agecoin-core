@@ -14,6 +14,7 @@ import (
 	"github.com/favecode/agecoin-core/database"
 	"github.com/favecode/agecoin-core/graph/generated"
 	graph "github.com/favecode/agecoin-core/graph/resolver"
+	customMiddleware "github.com/favecode/agecoin-core/middleware"
 	"github.com/favecode/agecoin-core/service"
 )
 
@@ -40,12 +41,13 @@ func main() {
 	user := database.User{DB: DB}
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8000"},
+		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
 		Debug:            true,
 	}).Handler)
 	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
+	router.Use(customMiddleware.AuthMiddleware(user))
 
 	s := service.New(service.Service{User: user})
 
@@ -57,5 +59,5 @@ func main() {
 	router.Handle("/query", queryHandler)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
