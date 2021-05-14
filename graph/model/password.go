@@ -7,6 +7,7 @@ import (
 )
 
 type Password struct {
+	tableName struct{}   `sql:"password"`
 	ID        string     `json:"id"`
 	UserID 		string     `json:"userId"`
 	Password  string     `json:"password"`
