@@ -382,7 +382,7 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 	var arg0 model.RegisterInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRegisterInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐRegisterInput(ctx, tmp)
+		arg0, err = ec.unmarshalNRegisterInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐRegisterInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -397,7 +397,7 @@ func (ec *executionContext) field_Mutation_test_args(ctx context.Context, rawArg
 	var arg0 model.TestInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTestInput(ctx, tmp)
+		arg0, err = ec.unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -427,7 +427,7 @@ func (ec *executionContext) field_Query_login_args(ctx context.Context, rawArgs 
 	var arg0 model.LoginInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNLoginInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐLoginInput(ctx, tmp)
+		arg0, err = ec.unmarshalNLoginInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -442,7 +442,7 @@ func (ec *executionContext) field_Query_test_args(ctx context.Context, rawArgs m
 	var arg0 model.TestInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTestInput(ctx, tmp)
+		arg0, err = ec.unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -521,7 +521,7 @@ func (ec *executionContext) _AuthResponse_authToken(ctx context.Context, field g
 	}
 	res := resTmp.(*model.AuthToken)
 	fc.Result = res
-	return ec.marshalNAuthToken2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthToken(ctx, field.Selections, res)
+	return ec.marshalNAuthToken2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthToken(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AuthResponse_user(ctx context.Context, field graphql.CollectedField, obj *model.AuthResponse) (ret graphql.Marshaler) {
@@ -665,7 +665,7 @@ func (ec *executionContext) _Mutation_test(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.Test)
 	fc.Result = res
-	return ec.marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTest(ctx, field.Selections, res)
+	return ec.marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTest(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_register(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -707,7 +707,7 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.AuthResponse)
 	fc.Result = res
-	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthResponse(ctx, field.Selections, res)
+	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_test(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -746,7 +746,7 @@ func (ec *executionContext) _Query_test(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*model.Test)
 	fc.Result = res
-	return ec.marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTest(ctx, field.Selections, res)
+	return ec.marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTest(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_login(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -788,7 +788,7 @@ func (ec *executionContext) _Query_login(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.AuthResponse)
 	fc.Result = res
-	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthResponse(ctx, field.Selections, res)
+	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getUserInfo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2839,11 +2839,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAuthResponse2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthResponse(ctx context.Context, sel ast.SelectionSet, v model.AuthResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthResponse2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx context.Context, sel ast.SelectionSet, v model.AuthResponse) graphql.Marshaler {
 	return ec._AuthResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthResponse(ctx context.Context, sel ast.SelectionSet, v *model.AuthResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx context.Context, sel ast.SelectionSet, v *model.AuthResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2853,7 +2853,7 @@ func (ec *executionContext) marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋag
 	return ec._AuthResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAuthToken2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐAuthToken(ctx context.Context, sel ast.SelectionSet, v *model.AuthToken) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthToken2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthToken(ctx context.Context, sel ast.SelectionSet, v *model.AuthToken) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2893,12 +2893,12 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNLoginInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐLoginInput(ctx context.Context, v interface{}) (model.LoginInput, error) {
+func (ec *executionContext) unmarshalNLoginInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (model.LoginInput, error) {
 	res, err := ec.unmarshalInputLoginInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNRegisterInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐRegisterInput(ctx context.Context, v interface{}) (model.RegisterInput, error) {
+func (ec *executionContext) unmarshalNRegisterInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐRegisterInput(ctx context.Context, v interface{}) (model.RegisterInput, error) {
 	res, err := ec.unmarshalInputRegisterInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -2918,7 +2918,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTestInput(ctx context.Context, v interface{}) (model.TestInput, error) {
+func (ec *executionContext) unmarshalNTestInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTestInput(ctx context.Context, v interface{}) (model.TestInput, error) {
 	res, err := ec.unmarshalInputTestInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -3229,7 +3229,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelsᚐTest(ctx context.Context, sel ast.SelectionSet, v *model.Test) graphql.Marshaler {
+func (ec *executionContext) marshalOTest2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTest(ctx context.Context, sel ast.SelectionSet, v *model.Test) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

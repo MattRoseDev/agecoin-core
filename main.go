@@ -49,7 +49,10 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Use(customMiddleware.AuthMiddleware(user))
 
-	s := service.New(service.Service{User: user})
+	s := service.New(service.Service{
+		User: user,
+		Password: database.Password{DB: DB},
+	})
 
 	c := generated.Config{Resolvers: &graph.Resolver{Service: s}}
 	queryHandler := handler.GraphQL(generated.NewExecutableSchema(c))
