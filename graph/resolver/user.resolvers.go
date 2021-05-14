@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/favecode/agecoin-core/graph/model"
+	models1 "github.com/favecode/agecoin-core/graph/model"
 )
 
-func (r *queryResolver) GetUserInfo(ctx context.Context) (*model.User, error) {
+func (r *queryResolver) GetUserInfo(ctx context.Context) (*models1.User, error) {
 	panic(fmt.Errorf("not implemented"))
 }

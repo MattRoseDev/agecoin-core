@@ -2,9 +2,18 @@
 
 package model
 
+import (
+	"time"
+)
+
 type AuthResponse struct {
-	Token string `json:"token"`
-	User  *User  `json:"user"`
+	AuthToken *AuthToken `json:"authToken"`
+	User      *User      `json:"user"`
+}
+
+type AuthToken struct {
+	Token     string    `json:"token"`
+	ExpiredAt time.Time `json:"expiredAt"`
 }
 
 type LoginInput struct {
