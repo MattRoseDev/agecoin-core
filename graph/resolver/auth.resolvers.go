@@ -5,16 +5,14 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/favecode/agecoin-core/graph/model"
 )
 
 func (r *mutationResolver) Register(ctx context.Context, input model.RegisterInput) (*model.AuthResponse, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.Service.Register(ctx, input)
 }
 
 func (r *queryResolver) Login(ctx context.Context, input model.LoginInput) (*model.AuthResponse, error) {
 	return r.Service.Login(ctx, input)
-
 }
