@@ -5,11 +5,10 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
-	models1 "github.com/favecode/agecoin-core/graph/model"
+	"github.com/favecode/agecoin-core/graph/model"
 )
 
-func (r *queryResolver) GetUserInfo(ctx context.Context) (*models1.User, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *queryResolver) GetUserInfo(ctx context.Context) (*model.User, error) {
+	return r.Service.GetUserInfo(ctx)
 }
