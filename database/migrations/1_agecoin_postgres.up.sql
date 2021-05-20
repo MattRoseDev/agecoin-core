@@ -11,6 +11,8 @@ CREATE TABLE "user" (
 	"email" varchar(100) NOT NULL UNIQUE,
 	"fullname" varchar(64) NOT NULL,
 	"role" user_roles DEFAULT 'USER',
+	"birthday" TIMESTAMP,
+	"max_age" integer DEFAULT NUll,
   "created_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
 	"updated_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
 	"deleted_at" TIMESTAMP,
