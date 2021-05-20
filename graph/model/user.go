@@ -14,6 +14,8 @@ type User struct {
 	Email     string     `json:"email"`
 	Fullname  *string    `json:"fullname"`
 	Role      string     `json:"role"`
+	Birthday  *time.Time `json:"birthday"`
+	MaxAge    *int     	 `json:"maxAge"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `json:"-" pg:",soft_delete"`
