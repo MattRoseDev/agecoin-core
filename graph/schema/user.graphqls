@@ -3,6 +3,8 @@ type User {
   username: String!
   email: String!
   fullname: String
+  birthday: Time
+  maxAge: Int
   role: String!
   createdAt: Time!
   updatedAt: Time!
