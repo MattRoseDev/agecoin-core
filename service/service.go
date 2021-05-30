@@ -11,12 +11,14 @@ import (
 type Service struct {
   User database.User
   Password database.Password
+  Task database.Task
 }
 
 func New(service Service) *Service {
   return &Service{
 		User: service.User, 
 		Password: service.Password,
+		Task: service.Task,
 	}
 }
 
