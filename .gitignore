@@ -1,3 +1,4 @@
+.DS_Store
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -15,5 +16,5 @@
 # vendor/
 
 /tmp
-.env.local
+.env
 Makefile

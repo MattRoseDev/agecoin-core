@@ -74,15 +74,15 @@ func parseToken(r *http.Request) (*jwt.Token, error) {
 }
 
 func GetCurrentUserFromCTX(ctx context.Context) (*model.User, error) {
-	errNoUserInContext := errors.New("no user in context")
+	errAutheticationFailed := errors.New("Authetication failed")
 
 	if ctx.Value(CurrentUserKey) == nil {
-		return nil, errNoUserInContext
+		return nil, errAutheticationFailed
 	}
 
 	user, ok := ctx.Value(CurrentUserKey).(*model.User)
 	if !ok || user.ID == "" {
-		return nil, errNoUserInContext
+		return nil, errAutheticationFailed
 	}
 
 	return user, nil

@@ -1,0 +1,19 @@
+type Task {
+  id: ID!
+  userId: ID!
+  title: String!
+  description: String
+  defaultCoins: Int!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+input AddTaskInput {
+  title: String!
+  description: String
+  defaultCoins: Int!
+}
+
+extend type Mutation {
+  addTask(input: AddTaskInput!): Task
+}
