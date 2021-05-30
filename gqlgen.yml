@@ -43,3 +43,5 @@ autobind: []
 models:
   User:
     model: github.com/favecode/agecoin-core/graph/model.User
+  Task:
+    model: github.com/favecode/agecoin-core/graph/model.Task

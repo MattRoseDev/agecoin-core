@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+type AddTaskInput struct {
+	Title        string  `json:"title"`
+	Description  *string `json:"description"`
+	DefaultCoins int     `json:"defaultCoins"`
+}
+
 type AuthResponse struct {
 	AuthToken *AuthToken `json:"authToken"`
 	User      *User      `json:"user"`
@@ -22,9 +28,9 @@ type LoginInput struct {
 }
 
 type RegisterInput struct {
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Fullname *string `json:"fullname"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
 }
 
 type Test struct {
