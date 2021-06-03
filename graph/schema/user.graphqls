@@ -8,6 +8,7 @@ type User {
   role: String!
   createdAt: Time!
   updatedAt: Time!
+  tasks: [Task]
 }
 
 extend type Query {
