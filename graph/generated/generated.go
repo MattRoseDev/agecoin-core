@@ -61,6 +61,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		GetTasks    func(childComplexity int) int
 		GetUserInfo func(childComplexity int) int
 		Login       func(childComplexity int, input model.LoginInput) int
 		Test        func(childComplexity int, input model.TestInput) int
@@ -101,6 +102,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	Test(ctx context.Context, input model.TestInput) (*model.Test, error)
 	Login(ctx context.Context, input model.LoginInput) (*model.AuthResponse, error)
+	GetTasks(ctx context.Context) ([]*model.Task, error)
 	GetUserInfo(ctx context.Context) (*model.User, error)
 }
 
@@ -182,6 +184,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Test(childComplexity, args["input"].(model.TestInput)), true
+
+	case "Query.getTasks":
+		if e.complexity.Query.GetTasks == nil {
+			break
+		}
+
+		return e.complexity.Query.GetTasks(childComplexity), true
 
 	case "Query.getUserInfo":
 		if e.complexity.Query.GetUserInfo == nil {
@@ -458,6 +467,10 @@ input AddTaskInput {
   title: String!
   description: String
   defaultCoins: Int!
+}
+
+extend type Query {
+  getTasks: [Task]
 }
 
 extend type Mutation {
@@ -954,6 +967,38 @@ func (ec *executionContext) _Query_login(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.AuthResponse)
 	fc.Result = res
 	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getTasks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetTasks(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Task)
+	fc.Result = res
+	return ec.marshalOTask2ᚕᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTask(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getUserInfo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2996,6 +3041,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "getTasks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getTasks(ctx, field)
+				return res
+			})
 		case "getUserInfo":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -3829,6 +3885,46 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOTask2ᚕᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTask(ctx context.Context, sel ast.SelectionSet, v []*model.Task) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTask(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐTask(ctx context.Context, sel ast.SelectionSet, v *model.Task) graphql.Marshaler {

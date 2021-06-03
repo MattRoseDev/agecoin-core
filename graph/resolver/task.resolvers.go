@@ -12,3 +12,7 @@ import (
 func (r *mutationResolver) AddTask(ctx context.Context, input model.AddTaskInput) (*model.Task, error) {
 	return r.Service.AddTask(ctx, input)
 }
+
+func (r *queryResolver) GetTasks(ctx context.Context) ([]*model.Task, error) {
+	return r.Service.GetTasks(ctx)
+}
