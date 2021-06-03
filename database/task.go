@@ -12,16 +12,22 @@ type Task struct {
 }
 
 func (t *Task) GetTaskByField(field, value string) (*model.Task, error) {
-	var user model.Task
-	err := t.DB.Model(&user).Where(fmt.Sprintf("%v = ?", field), value).Where("deleted_at is ?", nil).First()
-	return &user, err
+	var task model.Task
+	err := t.DB.Model(&task).Where(fmt.Sprintf("%v = ?", field), value).Where("deleted_at is ?", nil).First()
+	return &task, err
 }
 
 func (t *Task) GetTaskByID(id string) (*model.Task, error) {
 	return t.GetTaskByField("id", id)
 }
 
-func (t *Task) CreateTask(user *model.Task) (*model.Task, error) {
-	_, err := t.DB.Model(user).Returning("*").Insert()
-	return user, err
+func (t *Task) CreateTask(task *model.Task) (*model.Task, error) {
+	_, err := t.DB.Model(task).Returning("*").Insert()
+	return task, err
+}
+
+func (t *Task) GetTasksByUserId(userId string) ([]*model.Task, error) {
+	var tasks []*model.Task
+	err := t.DB.Model(&tasks).Where("user_id = ?" ,userId).Where("deleted_at is ?", nil).Select()
+	return tasks, err
 }

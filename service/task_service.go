@@ -26,3 +26,19 @@ func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model
 	
 	return task, nil
 }
+
+func (s *Service) GetTasks(ctx context.Context) ([]*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	tasks, err := s.Task.GetTasksByUserId(user.ID)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	
+	return tasks, nil
+}
