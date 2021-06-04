@@ -42,3 +42,77 @@ func (s *Service) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	
 	return tasks, nil
 }
+
+func (s *Service) EditTask(ctx context.Context, input model.EditTaskInput) (*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	task, err := s.Task.GetTaskByID(input.TaskID)
+
+	if err != nil {
+		return nil, errors.New("task not found")
+	}
+
+	if task.UserID != user.ID {
+		return nil, errors.New("authorization failed")
+	}
+
+	didUpdate := false
+
+	if input.Title != nil {
+		task.Title= *input.Title
+		didUpdate = true
+	}
+
+	if input.Description != nil {
+		task.Description = input.Description
+		didUpdate = true
+	}
+
+	if input.Description != nil {
+		task.DefaultCoins = *input.DefaultCoins
+		didUpdate = true
+	}
+
+	if !didUpdate {
+		return nil, errors.New("no update done")
+	}
+
+	newTask, err := s.Task.UpdateTaskById(task)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	
+	return newTask, nil
+}
+
+
+func (s *Service) DeleteTask(ctx context.Context, input model.DeleteTaskInput) (*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	task, err := s.Task.GetTaskByID(input.TaskID)
+	
+	if err != nil {
+		return nil, errors.New("task not found")
+	}
+
+	if task.UserID != user.ID {
+		return nil, errors.New("authorization failed")
+	}
+
+	deletedTask, err := s.Task.DeleteTaskById(task.ID)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	
+	return deletedTask, nil
+}

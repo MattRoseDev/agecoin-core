@@ -13,6 +13,14 @@ func (r *mutationResolver) AddTask(ctx context.Context, input model.AddTaskInput
 	return r.Service.AddTask(ctx, input)
 }
 
+func (r *mutationResolver) EditTask(ctx context.Context, input model.EditTaskInput) (*model.Task, error) {
+	return r.Service.EditTask(ctx, input)
+}
+
+func (r *mutationResolver) DeleteTask(ctx context.Context, input model.DeleteTaskInput) (*model.Task, error) {
+	return r.Service.DeleteTask(ctx, input)
+}
+
 func (r *queryResolver) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	return r.Service.GetTasks(ctx)
 }
