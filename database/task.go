@@ -29,7 +29,7 @@ func (t *Task) CreateTask(task *model.Task) (*model.Task, error) {
 
 func (t *Task) GetTasksByUserId(userId string) ([]*model.Task, error) {
 	var tasks []*model.Task
-	err := t.DB.Model(&tasks).Where("user_id = ?" ,userId).Where("deleted_at is ?", nil).Returning("*").Select()
+	err := t.DB.Model(&tasks).Where("user_id = ?" ,userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
 	return tasks, err
 }
 
