@@ -43,14 +43,14 @@ func (s *Service) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	return tasks, nil
 }
 
-func (s *Service) EditTask(ctx context.Context, input model.EditTaskInput) (*model.Task, error) {
+func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
 
-	task, err := s.Task.GetTaskByID(input.TaskID)
+	task, err := s.Task.GetTaskByID(taskID)
 
 	if err != nil {
 		return nil, errors.New("task not found")
@@ -91,14 +91,14 @@ func (s *Service) EditTask(ctx context.Context, input model.EditTaskInput) (*mod
 }
 
 
-func (s *Service) DeleteTask(ctx context.Context, input model.DeleteTaskInput) (*model.Task, error) {
+func (s *Service) DeleteTask(ctx context.Context, taskID string) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
 
-	task, err := s.Task.GetTaskByID(input.TaskID)
+	task, err := s.Task.GetTaskByID(taskID)
 	
 	if err != nil {
 		return nil, errors.New("task not found")
