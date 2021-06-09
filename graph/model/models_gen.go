@@ -22,12 +22,7 @@ type AuthToken struct {
 	ExpiredAt time.Time `json:"expiredAt"`
 }
 
-type DeleteTaskInput struct {
-	TaskID string `json:"taskId"`
-}
-
 type EditTaskInput struct {
-	TaskID       string  `json:"taskId"`
 	Title        *string `json:"title"`
 	Description  *string `json:"description"`
 	DefaultCoins *int    `json:"defaultCoins"`

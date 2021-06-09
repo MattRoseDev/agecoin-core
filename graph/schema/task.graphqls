@@ -15,22 +15,18 @@ input AddTaskInput {
 }
 
 input EditTaskInput {
-  taskId: ID!
   title: String
   description: String
   defaultCoins: Int
 }
 
-input DeleteTaskInput {
-  taskId: ID!
-}
-
 extend type Query {
   getTasks: [Task]
+  getTask(taskId: ID!): Task
 }
 
 extend type Mutation {
   addTask(input: AddTaskInput!): Task
-  editTask(input: EditTaskInput!): Task
-  deleteTask(input: DeleteTaskInput!): Task
+  editTask(taskId: ID!, input: EditTaskInput!): Task
+  deleteTask(taskId: ID!): Task
 }
