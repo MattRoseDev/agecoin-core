@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/favecode/agecoin-core/graph/model"
 )
@@ -27,5 +26,5 @@ func (r *queryResolver) GetTasks(ctx context.Context) ([]*model.Task, error) {
 }
 
 func (r *queryResolver) GetTask(ctx context.Context, taskID string) (*model.Task, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.Service.GetTask(ctx, taskID)
 }
