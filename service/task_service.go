@@ -43,6 +43,26 @@ func (s *Service) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	return tasks, nil
 }
 
+func (s *Service) GetTask(ctx context.Context, taskID string) (*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	task, err := s.Task.GetTaskByUserIdAndID(user.ID, taskID)
+
+	if len(task.ID) == 0 {
+		return nil, errors.New("task not found") 
+	}
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	
+	return task, nil
+}
+
 func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 

@@ -22,6 +22,12 @@ func (t *Task) GetTaskByID(id string) (*model.Task, error) {
 	return t.GetTaskByField("id", id)
 }
 
+func (t *Task) GetTaskByUserIdAndID(userId string, id string) (*model.Task, error) {
+	var task model.Task
+	err := t.DB.Model(&task).Where("id = ?", id).Where("user_id = ?", userId).Where("deleted_at is ?", nil).First()
+	return &task, err
+}
+
 func (t *Task) CreateTask(task *model.Task) (*model.Task, error) {
 	_, err := t.DB.Model(task).Returning("*").Insert()
 	return task, err
