@@ -55,20 +55,41 @@ type ComplexityRoot struct {
 		Token     func(childComplexity int) int
 	}
 
+	CurrentTask struct {
+		Active       func(childComplexity int) int
+		Coins        func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		DefaultCoins func(childComplexity int) int
+		Description  func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Status       func(childComplexity int) int
+		TaskID       func(childComplexity int) int
+		UpdatedAt    func(childComplexity int) int
+		UserID       func(childComplexity int) int
+	}
+
 	Mutation struct {
-		AddTask    func(childComplexity int, input model.AddTaskInput) int
-		DeleteTask func(childComplexity int, taskID string) int
-		EditTask   func(childComplexity int, taskID string, input model.EditTaskInput) int
-		Register   func(childComplexity int, input model.RegisterInput) int
-		Test       func(childComplexity int, input model.TestInput) int
+		AddCurrentTask    func(childComplexity int, input model.AddCurrentTaskInput) int
+		AddTask           func(childComplexity int, input model.AddTaskInput) int
+		DeleteCurrentTask func(childComplexity int, currentTaskID string) int
+		DeleteTask        func(childComplexity int, taskID string) int
+		EditCurrentTask   func(childComplexity int, currentTaskID string, input model.EditCurrentTaskInput) int
+		EditTask          func(childComplexity int, taskID string, input model.EditTaskInput) int
+		PauseCurrentTask  func(childComplexity int, currentTaskID string) int
+		Register          func(childComplexity int, input model.RegisterInput) int
+		StartCurrentTask  func(childComplexity int, currentTaskID string) int
+		StopCurrentTask   func(childComplexity int, currentTaskID string) int
+		Test              func(childComplexity int, input model.TestInput) int
 	}
 
 	Query struct {
-		GetTask     func(childComplexity int, taskID string) int
-		GetTasks    func(childComplexity int) int
-		GetUserInfo func(childComplexity int) int
-		Login       func(childComplexity int, input model.LoginInput) int
-		Test        func(childComplexity int, input model.TestInput) int
+		GetCurrentTask  func(childComplexity int, currentTaskID string) int
+		GetCurrentTasks func(childComplexity int) int
+		GetTask         func(childComplexity int, taskID string) int
+		GetTasks        func(childComplexity int) int
+		GetUserInfo     func(childComplexity int) int
+		Login           func(childComplexity int, input model.LoginInput) int
+		Test            func(childComplexity int, input model.TestInput) int
 	}
 
 	Task struct {
@@ -102,6 +123,12 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	Test(ctx context.Context, input model.TestInput) (*model.Test, error)
 	Register(ctx context.Context, input model.RegisterInput) (*model.AuthResponse, error)
+	AddCurrentTask(ctx context.Context, input model.AddCurrentTaskInput) (*model.CurrentTask, error)
+	EditCurrentTask(ctx context.Context, currentTaskID string, input model.EditCurrentTaskInput) (*model.CurrentTask, error)
+	DeleteCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
+	StartCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
+	PauseCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
+	StopCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
 	AddTask(ctx context.Context, input model.AddTaskInput) (*model.Task, error)
 	EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error)
 	DeleteTask(ctx context.Context, taskID string) (*model.Task, error)
@@ -109,6 +136,8 @@ type MutationResolver interface {
 type QueryResolver interface {
 	Test(ctx context.Context, input model.TestInput) (*model.Test, error)
 	Login(ctx context.Context, input model.LoginInput) (*model.AuthResponse, error)
+	GetCurrentTasks(ctx context.Context) ([]*model.CurrentTask, error)
+	GetCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
 	GetTasks(ctx context.Context) ([]*model.Task, error)
 	GetTask(ctx context.Context, taskID string) (*model.Task, error)
 	GetUserInfo(ctx context.Context) (*model.User, error)
@@ -160,6 +189,88 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AuthToken.Token(childComplexity), true
 
+	case "CurrentTask.active":
+		if e.complexity.CurrentTask.Active == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.Active(childComplexity), true
+
+	case "CurrentTask.coins":
+		if e.complexity.CurrentTask.Coins == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.Coins(childComplexity), true
+
+	case "CurrentTask.createdAt":
+		if e.complexity.CurrentTask.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.CreatedAt(childComplexity), true
+
+	case "CurrentTask.defaultCoins":
+		if e.complexity.CurrentTask.DefaultCoins == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.DefaultCoins(childComplexity), true
+
+	case "CurrentTask.description":
+		if e.complexity.CurrentTask.Description == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.Description(childComplexity), true
+
+	case "CurrentTask.id":
+		if e.complexity.CurrentTask.ID == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.ID(childComplexity), true
+
+	case "CurrentTask.status":
+		if e.complexity.CurrentTask.Status == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.Status(childComplexity), true
+
+	case "CurrentTask.taskId":
+		if e.complexity.CurrentTask.TaskID == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.TaskID(childComplexity), true
+
+	case "CurrentTask.updatedAt":
+		if e.complexity.CurrentTask.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.UpdatedAt(childComplexity), true
+
+	case "CurrentTask.userId":
+		if e.complexity.CurrentTask.UserID == nil {
+			break
+		}
+
+		return e.complexity.CurrentTask.UserID(childComplexity), true
+
+	case "Mutation.AddCurrentTask":
+		if e.complexity.Mutation.AddCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_AddCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddCurrentTask(childComplexity, args["input"].(model.AddCurrentTaskInput)), true
+
 	case "Mutation.addTask":
 		if e.complexity.Mutation.AddTask == nil {
 			break
@@ -171,6 +282,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddTask(childComplexity, args["input"].(model.AddTaskInput)), true
+
+	case "Mutation.deleteCurrentTask":
+		if e.complexity.Mutation.DeleteCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteCurrentTask(childComplexity, args["currentTaskId"].(string)), true
 
 	case "Mutation.deleteTask":
 		if e.complexity.Mutation.DeleteTask == nil {
@@ -184,6 +307,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteTask(childComplexity, args["taskId"].(string)), true
 
+	case "Mutation.EditCurrentTask":
+		if e.complexity.Mutation.EditCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_EditCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.EditCurrentTask(childComplexity, args["currentTaskId"].(string), args["input"].(model.EditCurrentTaskInput)), true
+
 	case "Mutation.editTask":
 		if e.complexity.Mutation.EditTask == nil {
 			break
@@ -195,6 +330,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.EditTask(childComplexity, args["taskId"].(string), args["input"].(model.EditTaskInput)), true
+
+	case "Mutation.pauseCurrentTask":
+		if e.complexity.Mutation.PauseCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_pauseCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.PauseCurrentTask(childComplexity, args["currentTaskId"].(string)), true
 
 	case "Mutation.register":
 		if e.complexity.Mutation.Register == nil {
@@ -208,6 +355,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Register(childComplexity, args["input"].(model.RegisterInput)), true
 
+	case "Mutation.startCurrentTask":
+		if e.complexity.Mutation.StartCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_startCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.StartCurrentTask(childComplexity, args["currentTaskId"].(string)), true
+
+	case "Mutation.stopCurrentTask":
+		if e.complexity.Mutation.StopCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_stopCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.StopCurrentTask(childComplexity, args["currentTaskId"].(string)), true
+
 	case "Mutation.test":
 		if e.complexity.Mutation.Test == nil {
 			break
@@ -219,6 +390,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Test(childComplexity, args["input"].(model.TestInput)), true
+
+	case "Query.getCurrentTask":
+		if e.complexity.Query.GetCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetCurrentTask(childComplexity, args["currentTaskId"].(string)), true
+
+	case "Query.getCurrentTasks":
+		if e.complexity.Query.GetCurrentTasks == nil {
+			break
+		}
+
+		return e.complexity.Query.GetCurrentTasks(childComplexity), true
 
 	case "Query.getTask":
 		if e.complexity.Query.GetTask == nil {
@@ -489,6 +679,44 @@ extend type Mutation {
   register(input: RegisterInput!): AuthResponse!
 }
 `, BuiltIn: false},
+	{Name: "graph/schema/currentTask.graphqls", Input: `type CurrentTask {
+  id: ID!
+  userId: ID!
+  taskId: ID!
+  description: String
+  defaultCoins: Int!
+  coins: Int
+  status: Int!
+  active: Boolean
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+input AddCurrentTaskInput {
+  taskId: ID!
+  active: Boolean
+}
+
+input EditCurrentTaskInput {
+  taskId: ID!
+  description: String
+  defaultCoins: Int
+}
+
+extend type Query {
+  getCurrentTasks: [CurrentTask]
+  getCurrentTask(currentTaskId: ID!): CurrentTask
+}
+
+extend type Mutation {
+  AddCurrentTask(input: AddCurrentTaskInput!): CurrentTask
+  EditCurrentTask(currentTaskId: ID!, input: EditCurrentTaskInput!): CurrentTask
+  deleteCurrentTask(currentTaskId: ID!): CurrentTask
+  startCurrentTask(currentTaskId: ID!): CurrentTask
+  pauseCurrentTask(currentTaskId: ID!): CurrentTask
+  stopCurrentTask(currentTaskId: ID!): CurrentTask
+}
+`, BuiltIn: false},
 	{Name: "graph/schema/main.graphqls", Input: `scalar Time
 
 type Test {
@@ -564,6 +792,45 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_AddCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddCurrentTaskInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddCurrentTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAddCurrentTaskInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_EditCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
+	var arg1 model.EditCurrentTaskInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNEditCurrentTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐEditCurrentTaskInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_addTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -576,6 +843,21 @@ func (ec *executionContext) field_Mutation_addTask_args(ctx context.Context, raw
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
 	return args, nil
 }
 
@@ -618,6 +900,21 @@ func (ec *executionContext) field_Mutation_editTask_args(ctx context.Context, ra
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_pauseCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -630,6 +927,36 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_startCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_stopCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
 	return args, nil
 }
 
@@ -660,6 +987,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
 	return args, nil
 }
 
@@ -886,6 +1228,347 @@ func (ec *executionContext) _AuthToken_expiredAt(ctx context.Context, field grap
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CurrentTask_id(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_userId(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_taskId(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TaskID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_description(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_defaultCoins(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DefaultCoins, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_coins(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Coins, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_status(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_active(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Active, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CurrentTask_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.CurrentTask) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CurrentTask",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_test(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -965,6 +1648,240 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	res := resTmp.(*model.AuthResponse)
 	fc.Result = res
 	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_AddCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_AddCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddCurrentTask(rctx, args["input"].(model.AddCurrentTaskInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_EditCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_EditCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EditCurrentTask(rctx, args["currentTaskId"].(string), args["input"].(model.EditCurrentTaskInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteCurrentTask(rctx, args["currentTaskId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_startCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_startCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().StartCurrentTask(rctx, args["currentTaskId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_pauseCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_pauseCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().PauseCurrentTask(rctx, args["currentTaskId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_stopCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_stopCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().StopCurrentTask(rctx, args["currentTaskId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1163,6 +2080,77 @@ func (ec *executionContext) _Query_login(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.AuthResponse)
 	fc.Result = res
 	return ec.marshalNAuthResponse2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAuthResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getCurrentTasks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetCurrentTasks(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚕᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getCurrentTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetCurrentTask(rctx, args["currentTaskId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CurrentTask)
+	fc.Result = res
+	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getTasks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3041,6 +4029,34 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAddCurrentTaskInput(ctx context.Context, obj interface{}) (model.AddCurrentTaskInput, error) {
+	var it model.AddCurrentTaskInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "taskId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("taskId"))
+			it.TaskID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "active":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("active"))
+			it.Active, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputAddTaskInput(ctx context.Context, obj interface{}) (model.AddTaskInput, error) {
 	var it model.AddTaskInput
 	var asMap = obj.(map[string]interface{})
@@ -3068,6 +4084,42 @@ func (ec *executionContext) unmarshalInputAddTaskInput(ctx context.Context, obj 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("defaultCoins"))
 			it.DefaultCoins, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputEditCurrentTaskInput(ctx context.Context, obj interface{}) (model.EditCurrentTaskInput, error) {
+	var it model.EditCurrentTaskInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "taskId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("taskId"))
+			it.TaskID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "defaultCoins":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("defaultCoins"))
+			it.DefaultCoins, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3269,6 +4321,69 @@ func (ec *executionContext) _AuthToken(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
+var currentTaskImplementors = []string{"CurrentTask"}
+
+func (ec *executionContext) _CurrentTask(ctx context.Context, sel ast.SelectionSet, obj *model.CurrentTask) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, currentTaskImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CurrentTask")
+		case "id":
+			out.Values[i] = ec._CurrentTask_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "userId":
+			out.Values[i] = ec._CurrentTask_userId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "taskId":
+			out.Values[i] = ec._CurrentTask_taskId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "description":
+			out.Values[i] = ec._CurrentTask_description(ctx, field, obj)
+		case "defaultCoins":
+			out.Values[i] = ec._CurrentTask_defaultCoins(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "coins":
+			out.Values[i] = ec._CurrentTask_coins(ctx, field, obj)
+		case "status":
+			out.Values[i] = ec._CurrentTask_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "active":
+			out.Values[i] = ec._CurrentTask_active(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._CurrentTask_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._CurrentTask_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3291,6 +4406,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "AddCurrentTask":
+			out.Values[i] = ec._Mutation_AddCurrentTask(ctx, field)
+		case "EditCurrentTask":
+			out.Values[i] = ec._Mutation_EditCurrentTask(ctx, field)
+		case "deleteCurrentTask":
+			out.Values[i] = ec._Mutation_deleteCurrentTask(ctx, field)
+		case "startCurrentTask":
+			out.Values[i] = ec._Mutation_startCurrentTask(ctx, field)
+		case "pauseCurrentTask":
+			out.Values[i] = ec._Mutation_pauseCurrentTask(ctx, field)
+		case "stopCurrentTask":
+			out.Values[i] = ec._Mutation_stopCurrentTask(ctx, field)
 		case "addTask":
 			out.Values[i] = ec._Mutation_addTask(ctx, field)
 		case "editTask":
@@ -3346,6 +4473,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "getCurrentTasks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getCurrentTasks(ctx, field)
+				return res
+			})
+		case "getCurrentTask":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getCurrentTask(ctx, field)
 				return res
 			})
 		case "getTasks":
@@ -3791,6 +4940,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) unmarshalNAddCurrentTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAddCurrentTaskInput(ctx context.Context, v interface{}) (model.AddCurrentTaskInput, error) {
+	res, err := ec.unmarshalInputAddCurrentTaskInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNAddTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐAddTaskInput(ctx context.Context, v interface{}) (model.AddTaskInput, error) {
 	res, err := ec.unmarshalInputAddTaskInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3833,6 +4987,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNEditCurrentTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐEditCurrentTaskInput(ctx context.Context, v interface{}) (model.EditCurrentTaskInput, error) {
+	res, err := ec.unmarshalInputEditCurrentTaskInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNEditTaskInput2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐEditTaskInput(ctx context.Context, v interface{}) (model.EditTaskInput, error) {
@@ -4180,6 +5339,53 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOCurrentTask2ᚕᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx context.Context, sel ast.SelectionSet, v []*model.CurrentTask) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx context.Context, sel ast.SelectionSet, v *model.CurrentTask) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CurrentTask(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

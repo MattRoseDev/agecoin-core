@@ -22,16 +22,16 @@ const defaultPort = "8080"
 
 func init() {
 	err := godotenv.Load()
-  if err != nil {
-    log.Fatal("Error loading .env file")
-  }
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }
 
 func main() {
 	DB := database.New()
 
 	defer DB.Close()
-	
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -52,14 +52,14 @@ func main() {
 	router.Use(customMiddleware.AuthMiddleware(user))
 
 	s := service.New(service.Service{
-		User: user,
-		Password: database.Password{DB: DB},
-		Task: database.Task{DB: DB},
+		User:        user,
+		Password:    database.Password{DB: DB},
+		Task:        database.Task{DB: DB},
+		CurrentTask: database.CurrentTask{DB: DB},
 	})
 
 	c := generated.Config{Resolvers: &graph.Resolver{Service: s}}
 	queryHandler := handler.GraphQL(generated.NewExecutableSchema(c))
-
 
 	router.Handle("/", handler.Playground("GraphQL playground", "/query"))
 	router.Handle("/query", queryHandler)
