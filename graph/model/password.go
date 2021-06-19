@@ -9,7 +9,7 @@ import (
 type Password struct {
 	tableName struct{}   `sql:"password"`
 	ID        string     `json:"id"`
-	UserID 		string     `json:"userId"`
+	UserID    string     `json:"userId"`
 	Password  string     `json:"password"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
@@ -33,4 +33,3 @@ func (p *Password) ComparePassword(password string) error {
 	byteHashedPassword := []byte(p.Password)
 	return bcrypt.CompareHashAndPassword(byteHashedPassword, bytePassword)
 }
-

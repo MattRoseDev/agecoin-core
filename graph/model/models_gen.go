@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type AddCurrentTaskInput struct {
+	TaskID string `json:"taskId"`
+	Active *bool  `json:"active"`
+}
+
 type AddTaskInput struct {
 	Title        string  `json:"title"`
 	Description  *string `json:"description"`
@@ -20,6 +25,12 @@ type AuthResponse struct {
 type AuthToken struct {
 	Token     string    `json:"token"`
 	ExpiredAt time.Time `json:"expiredAt"`
+}
+
+type EditCurrentTaskInput struct {
+	TaskID       string  `json:"taskId"`
+	Description  *string `json:"description"`
+	DefaultCoins *int    `json:"defaultCoins"`
 }
 
 type EditTaskInput struct {

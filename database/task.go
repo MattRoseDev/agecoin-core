@@ -35,20 +35,20 @@ func (t *Task) CreateTask(task *model.Task) (*model.Task, error) {
 
 func (t *Task) GetTasksByUserId(userId string) ([]*model.Task, error) {
 	var tasks []*model.Task
-	err := t.DB.Model(&tasks).Where("user_id = ?" ,userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	err := t.DB.Model(&tasks).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
 	return tasks, err
 }
 
 func (t *Task) UpdateTaskById(task *model.Task) (*model.Task, error) {
-	_, err := t.DB.Model(task).Where("id = ?" ,task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
+	_, err := t.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
 	return task, err
 }
 
 func (t *Task) DeleteTaskById(taskId string) (*model.Task, error) {
 	DeletedAt := time.Now()
 	var task = &model.Task{
-		ID: taskId,
-		DeletedAt: &DeletedAt, 
+		ID:        taskId,
+		DeletedAt: &DeletedAt,
 	}
 	_, err := t.DB.Model(task).Set("deleted_at = ?deleted_at").Where("id = ?id").Where("deleted_at is ?", nil).Returning("*").Update()
 	return task, err

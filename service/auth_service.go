@@ -43,7 +43,7 @@ func (s *Service) Register(ctx context.Context, input model.RegisterInput) (*mod
 	}
 
 	user := &model.User{
-		Email: input.Email,
+		Email:    input.Email,
 		Username: util.RandomString(15),
 		Fullname: input.Fullname,
 	}
@@ -55,7 +55,7 @@ func (s *Service) Register(ctx context.Context, input model.RegisterInput) (*mod
 	}
 	defer userTx.Rollback()
 
-	newUser, err := s.User.CreateUser(userTx, user);
+	newUser, err := s.User.CreateUser(userTx, user)
 
 	if err != nil {
 		log.Printf("error creating a user: %v", err)
@@ -67,8 +67,8 @@ func (s *Service) Register(ctx context.Context, input model.RegisterInput) (*mod
 		return nil, err
 	}
 
-	password := &model.Password {
-		UserID: newUser.ID,	
+	password := &model.Password{
+		UserID: newUser.ID,
 	}
 
 	err = password.HashPassword(input.Password)
@@ -77,7 +77,7 @@ func (s *Service) Register(ctx context.Context, input model.RegisterInput) (*mod
 		return nil, errors.New("something went wrong")
 	}
 
-	passwordTx, err := s.Password.DB.Begin();
+	passwordTx, err := s.Password.DB.Begin()
 	if err != nil {
 		log.Printf("error creating a transaction: %v", err)
 		return nil, errors.New("something went wrong")

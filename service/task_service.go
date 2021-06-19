@@ -16,14 +16,14 @@ func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model
 	}
 
 	task := &model.Task{
-		UserID: user.ID,
-		Title: input.Title,
-		Description: input.Description,
+		UserID:       user.ID,
+		Title:        input.Title,
+		Description:  input.Description,
 		DefaultCoins: input.DefaultCoins,
 	}
 
 	s.Task.CreateTask(task)
-	
+
 	return task, nil
 }
 
@@ -39,7 +39,7 @@ func (s *Service) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	
+
 	return tasks, nil
 }
 
@@ -53,13 +53,13 @@ func (s *Service) GetTask(ctx context.Context, taskID string) (*model.Task, erro
 	task, err := s.Task.GetTaskByUserIdAndID(user.ID, taskID)
 
 	if len(task.ID) == 0 {
-		return nil, errors.New("task not found") 
+		return nil, errors.New("task not found")
 	}
 
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	
+
 	return task, nil
 }
 
@@ -83,7 +83,7 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditT
 	didUpdate := false
 
 	if input.Title != nil {
-		task.Title= *input.Title
+		task.Title = *input.Title
 		didUpdate = true
 	}
 
@@ -106,10 +106,9 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditT
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	
+
 	return newTask, nil
 }
-
 
 func (s *Service) DeleteTask(ctx context.Context, taskID string) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
@@ -119,7 +118,7 @@ func (s *Service) DeleteTask(ctx context.Context, taskID string) (*model.Task, e
 	}
 
 	task, err := s.Task.GetTaskByID(taskID)
-	
+
 	if err != nil {
 		return nil, errors.New("task not found")
 	}
@@ -133,6 +132,6 @@ func (s *Service) DeleteTask(ctx context.Context, taskID string) (*model.Task, e
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	
+
 	return deletedTask, nil
 }

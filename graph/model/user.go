@@ -15,7 +15,7 @@ type User struct {
 	Fullname  *string    `json:"fullname"`
 	Role      string     `json:"role"`
 	Birthday  *time.Time `json:"birthday"`
-	MaxAge    *int     	 `json:"maxAge"`
+	MaxAge    *int       `json:"maxAge"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `json:"-" pg:",soft_delete"`
@@ -37,7 +37,7 @@ func (u *User) GenToken() (*AuthToken, error) {
 	}
 
 	return &AuthToken{
-		Token: token,
+		Token:     token,
 		ExpiredAt: expiredAt,
 	}, nil
 }
