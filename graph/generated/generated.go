@@ -75,10 +75,10 @@ type ComplexityRoot struct {
 		DeleteTask        func(childComplexity int, taskID string) int
 		EditCurrentTask   func(childComplexity int, currentTaskID string, input model.EditCurrentTaskInput) int
 		EditTask          func(childComplexity int, taskID string, input model.EditTaskInput) int
+		FinishCurrentTask func(childComplexity int, currentTaskID string) int
 		PauseCurrentTask  func(childComplexity int, currentTaskID string) int
 		Register          func(childComplexity int, input model.RegisterInput) int
 		StartCurrentTask  func(childComplexity int, currentTaskID string) int
-		StopCurrentTask   func(childComplexity int, currentTaskID string) int
 		Test              func(childComplexity int, input model.TestInput) int
 	}
 
@@ -128,7 +128,7 @@ type MutationResolver interface {
 	DeleteCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
 	StartCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
 	PauseCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
-	StopCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
+	FinishCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error)
 	AddTask(ctx context.Context, input model.AddTaskInput) (*model.Task, error)
 	EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error)
 	DeleteTask(ctx context.Context, taskID string) (*model.Task, error)
@@ -331,6 +331,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.EditTask(childComplexity, args["taskId"].(string), args["input"].(model.EditTaskInput)), true
 
+	case "Mutation.finishCurrentTask":
+		if e.complexity.Mutation.FinishCurrentTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_finishCurrentTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.FinishCurrentTask(childComplexity, args["currentTaskId"].(string)), true
+
 	case "Mutation.pauseCurrentTask":
 		if e.complexity.Mutation.PauseCurrentTask == nil {
 			break
@@ -366,18 +378,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.StartCurrentTask(childComplexity, args["currentTaskId"].(string)), true
-
-	case "Mutation.stopCurrentTask":
-		if e.complexity.Mutation.StopCurrentTask == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_stopCurrentTask_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.StopCurrentTask(childComplexity, args["currentTaskId"].(string)), true
 
 	case "Mutation.test":
 		if e.complexity.Mutation.Test == nil {
@@ -714,7 +714,7 @@ extend type Mutation {
   deleteCurrentTask(currentTaskId: ID!): CurrentTask
   startCurrentTask(currentTaskId: ID!): CurrentTask
   pauseCurrentTask(currentTaskId: ID!): CurrentTask
-  stopCurrentTask(currentTaskId: ID!): CurrentTask
+  finishCurrentTask(currentTaskId: ID!): CurrentTask
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/main.graphqls", Input: `scalar Time
@@ -900,6 +900,21 @@ func (ec *executionContext) field_Mutation_editTask_args(ctx context.Context, ra
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_finishCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["currentTaskId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentTaskId"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_pauseCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -931,21 +946,6 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 }
 
 func (ec *executionContext) field_Mutation_startCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["currentTaskId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentTaskId"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["currentTaskId"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_stopCurrentTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1845,7 +1845,7 @@ func (ec *executionContext) _Mutation_pauseCurrentTask(ctx context.Context, fiel
 	return ec.marshalOCurrentTask2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐCurrentTask(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_stopCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_finishCurrentTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1862,7 +1862,7 @@ func (ec *executionContext) _Mutation_stopCurrentTask(ctx context.Context, field
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_stopCurrentTask_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_finishCurrentTask_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1870,7 +1870,7 @@ func (ec *executionContext) _Mutation_stopCurrentTask(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().StopCurrentTask(rctx, args["currentTaskId"].(string))
+		return ec.resolvers.Mutation().FinishCurrentTask(rctx, args["currentTaskId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4416,8 +4416,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_startCurrentTask(ctx, field)
 		case "pauseCurrentTask":
 			out.Values[i] = ec._Mutation_pauseCurrentTask(ctx, field)
-		case "stopCurrentTask":
-			out.Values[i] = ec._Mutation_stopCurrentTask(ctx, field)
+		case "finishCurrentTask":
+			out.Values[i] = ec._Mutation_finishCurrentTask(ctx, field)
 		case "addTask":
 			out.Values[i] = ec._Mutation_addTask(ctx, field)
 		case "editTask":

@@ -33,5 +33,5 @@ extend type Mutation {
   deleteCurrentTask(currentTaskId: ID!): CurrentTask
   startCurrentTask(currentTaskId: ID!): CurrentTask
   pauseCurrentTask(currentTaskId: ID!): CurrentTask
-  stopCurrentTask(currentTaskId: ID!): CurrentTask
+  finishCurrentTask(currentTaskId: ID!): CurrentTask
 }
