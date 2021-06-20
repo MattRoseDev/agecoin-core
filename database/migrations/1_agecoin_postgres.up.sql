@@ -47,7 +47,7 @@ CREATE TABLE "task" (
   OIDS=FALSE
 );
 -- Current Task Fields
--- status: 0: Not started, 1: started, 2: canceled 
+-- status: 0: Not started, 1: started, 2: finished, 3: canceled 
 
 CREATE TABLE "current_task" (
 	"id" uuid NOT NULL DEFAULT uuid_generate_v4(),
