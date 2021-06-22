@@ -8,7 +8,6 @@ import (
 
 type AddCurrentTaskInput struct {
 	TaskID string `json:"taskId"`
-	Active *bool  `json:"active"`
 }
 
 type AddTaskInput struct {

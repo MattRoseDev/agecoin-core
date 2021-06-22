@@ -25,7 +25,6 @@ func (s *Service) AddCurrentTask(ctx context.Context, input model.AddCurrentTask
 		TaskID:       input.TaskID,
 		UserID:       user.ID,
 		DefaultCoins: task.DefaultCoins,
-		Active:       input.Active,
 	}
 
 	s.CurrentTask.CreateCurrentTask(currentTask)
