@@ -9,18 +9,20 @@ import (
 )
 
 type Service struct {
-	User        database.User
-	Password    database.Password
-	Task        database.Task
-	CurrentTask database.CurrentTask
+	User               database.User
+	Password           database.Password
+	Task               database.Task
+	CurrentTask        database.CurrentTask
+	CurrentTaskHistory database.CurrentTaskHistory
 }
 
 func New(service Service) *Service {
 	return &Service{
-		User:        service.User,
-		Password:    service.Password,
-		Task:        service.Task,
-		CurrentTask: service.CurrentTask,
+		User:               service.User,
+		Password:           service.Password,
+		Task:               service.Task,
+		CurrentTask:        service.CurrentTask,
+		CurrentTaskHistory: service.CurrentTaskHistory,
 	}
 }
 

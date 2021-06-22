@@ -52,10 +52,11 @@ func main() {
 	router.Use(customMiddleware.AuthMiddleware(user))
 
 	s := service.New(service.Service{
-		User:        user,
-		Password:    database.Password{DB: DB},
-		Task:        database.Task{DB: DB},
-		CurrentTask: database.CurrentTask{DB: DB},
+		User:               user,
+		Password:           database.Password{DB: DB},
+		Task:               database.Task{DB: DB},
+		CurrentTask:        database.CurrentTask{DB: DB},
+		CurrentTaskHistory: database.CurrentTaskHistory{DB: DB},
 	})
 
 	c := generated.Config{Resolvers: &graph.Resolver{Service: s}}
