@@ -22,9 +22,10 @@ func (s *Service) AddCurrentTask(ctx context.Context, input model.AddCurrentTask
 	}
 
 	currentTask := &model.CurrentTask{
-		TaskID: input.TaskID,
-		UserID: user.ID,
-		Active: input.Active,
+		TaskID:       input.TaskID,
+		UserID:       user.ID,
+		DefaultCoins: task.DefaultCoins,
+		Active:       input.Active,
 	}
 
 	s.CurrentTask.CreateCurrentTask(currentTask)
