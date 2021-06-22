@@ -61,8 +61,8 @@ CREATE TABLE "current_task" (
 	"status" integer NOT NULL DEFAULT 0,
 	"description" TEXT,
 	"active" BOOLEAN NOT NULL DEFAULT FALSE,
-	"created_at" TIMESTAMP NOT NULL,
-	"updated_at" TIMESTAMP NOT NULL,
+	"created_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
+	"updated_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
 	"deleted_at" TIMESTAMP,
 	CONSTRAINT "current_task_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -74,8 +74,8 @@ CREATE TABLE "current_task_history" (
 	"user_id" uuid NOT NULL,
 	"task_id" uuid NOT NULL,
 	"type" current_task_history_type NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
-	"updated_at" TIMESTAMP NOT NULL,
+  "created_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
+	"updated_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
 	"deleted_at" TIMESTAMP,
 	CONSTRAINT "current_task_history_pk" PRIMARY KEY ("id")
 ) WITH (
