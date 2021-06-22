@@ -13,7 +13,7 @@ type CurrentTask struct {
 	DefaultCoins int        `json:"defaultCoins"`
 	Coins        *int       `json:"coins"`
 	Status       int        `json:"status"`
-	Active       *bool      `json:"active"`
+	Active       bool       `json:"active"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	UpdatedAt    time.Time  `json:"updatedAt"`
 	DeletedAt    *time.Time `json:"-" pg:",soft_delete"`

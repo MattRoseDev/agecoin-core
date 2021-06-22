@@ -92,7 +92,7 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditT
 		didUpdate = true
 	}
 
-	if input.Description != nil {
+	if input.DefaultCoins != nil {
 		task.DefaultCoins = *input.DefaultCoins
 		didUpdate = true
 	}

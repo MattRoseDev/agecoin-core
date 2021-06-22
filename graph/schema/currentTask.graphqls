@@ -6,14 +6,13 @@ type CurrentTask {
   defaultCoins: Int!
   coins: Int
   status: Int!
-  active: Boolean
+  active: Boolean!
   createdAt: Time!
   updatedAt: Time!
 }
 
 input AddCurrentTaskInput {
   taskId: ID!
-  active: Boolean
 }
 
 input EditCurrentTaskInput {
