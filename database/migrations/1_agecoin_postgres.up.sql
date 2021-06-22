@@ -72,7 +72,7 @@ CREATE TABLE "current_task" (
 CREATE TABLE "current_task_history" (
 	"id" uuid NOT NULL DEFAULT uuid_generate_v4(),
 	"user_id" uuid NOT NULL,
-	"task_id" uuid NOT NULL,
+	"current_task_id" uuid NOT NULL,
 	"type" current_task_history_type NOT NULL,
   "created_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
 	"updated_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
@@ -106,4 +106,4 @@ ALTER TABLE "current_task" ADD CONSTRAINT "current_task_fk0" FOREIGN KEY ("user_
 ALTER TABLE "current_task" ADD CONSTRAINT "current_task_fk1" FOREIGN KEY ("task_id") REFERENCES "task"("id");
 
 ALTER TABLE "current_task_history" ADD CONSTRAINT "current_task_history_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
-ALTER TABLE "current_task_history" ADD CONSTRAINT "current_task_history_fk1" FOREIGN KEY ("task_id") REFERENCES "task"("id");
+ALTER TABLE "current_task_history" ADD CONSTRAINT "current_task_history_fk1" FOREIGN KEY ("current_task_id") REFERENCES "current_task"("id");
