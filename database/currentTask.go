@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/favecode/agecoin-core/graph/model"
 	"github.com/go-pg/pg"
 )
@@ -9,7 +11,28 @@ type CurrentTask struct {
 	DB *pg.DB
 }
 
+func (c *CurrentTask) GetCurrentTaskByField(field, value string) (*model.CurrentTask, error) {
+	var currentTask model.CurrentTask
+	err := c.DB.Model(&currentTask).Where(fmt.Sprintf("%v = ?", field), value).Where("deleted_at is ?", nil).First()
+	return &currentTask, err
+}
+
+func (c *CurrentTask) GetCurrentTaskByID(id string) (*model.CurrentTask, error) {
+	return c.GetCurrentTaskByField("id", id)
+}
+
 func (c *CurrentTask) CreateCurrentTask(currentTask *model.CurrentTask) (*model.CurrentTask, error) {
 	_, err := c.DB.Model(currentTask).Returning("*").Insert()
+	return currentTask, err
+}
+
+func (c *CurrentTask) DeactiveAllCurrentTaskByUserId(userId string) ([]*model.CurrentTask, error) {
+	var currentTasks []*model.CurrentTask
+	_, err := c.DB.Model(&currentTasks).Set("active = ?", false).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Returning("*").Update()
+	return currentTasks, err
+}
+
+func (c *CurrentTask) UpdateCurrentTaskById(currentTask *model.CurrentTask) (*model.CurrentTask, error) {
+	_, err := c.DB.Model(currentTask).Where("id = ?", currentTask.ID).Where("deleted_at is ?", nil).Returning("*").Update()
 	return currentTask, err
 }
