@@ -9,7 +9,13 @@ type CurrentTaskHistory struct {
 	DB *pg.DB
 }
 
-func (c *CurrentTaskHistory) CreateCurrentTaskHistory(currentTask *model.CurrentTaskHistory) (*model.CurrentTaskHistory, error) {
-	_, err := c.DB.Model(currentTask).Returning("*").Insert()
-	return currentTask, err
+func (c *CurrentTaskHistory) CreateCurrentTaskHistory(currentTaskHistory *model.CurrentTaskHistory) (*model.CurrentTaskHistory, error) {
+	_, err := c.DB.Model(currentTaskHistory).Returning("*").Insert()
+	return currentTaskHistory, err
+}
+
+func (c *CurrentTaskHistory) GetCurrentTaskHistoryByCurrentTaskId(currentTaskId string) (*model.CurrentTaskHistory, error) {
+	var currentTaskHistory model.CurrentTaskHistory
+	err := c.DB.Model(&currentTaskHistory).Where("current_task_id = ?", currentTaskId).Where("deleted_at is ?", nil).Order("created_at DESC").First()
+	return &currentTaskHistory, err
 }

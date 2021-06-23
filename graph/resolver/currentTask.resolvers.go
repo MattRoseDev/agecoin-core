@@ -27,7 +27,7 @@ func (r *mutationResolver) StartCurrentTask(ctx context.Context, currentTaskID s
 }
 
 func (r *mutationResolver) PauseCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.Service.PauseCurrentTask(ctx, currentTaskID)
 }
 
 func (r *mutationResolver) FinishCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
