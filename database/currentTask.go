@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/favecode/agecoin-core/graph/model"
 	"github.com/go-pg/pg"
@@ -34,5 +35,15 @@ func (c *CurrentTask) DeactiveAllCurrentTaskByUserId(userId string) ([]*model.Cu
 
 func (c *CurrentTask) UpdateCurrentTaskById(currentTask *model.CurrentTask) (*model.CurrentTask, error) {
 	_, err := c.DB.Model(currentTask).Where("id = ?", currentTask.ID).Where("deleted_at is ?", nil).Returning("*").Update()
+	return currentTask, err
+}
+
+func (c *CurrentTask) DeleteCurrentTaskById(currentTaskId string) (*model.CurrentTask, error) {
+	DeletedAt := time.Now()
+	var currentTask = &model.CurrentTask{
+		ID:        currentTaskId,
+		DeletedAt: &DeletedAt,
+	}
+	_, err := c.DB.Model(currentTask).Set("deleted_at = ?deleted_at").Where("id = ?id").Where("deleted_at is ?", nil).Returning("*").Update()
 	return currentTask, err
 }
