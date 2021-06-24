@@ -115,3 +115,37 @@ func (s *Service) PauseCurrentTask(ctx context.Context, currentTaskID string) (*
 
 	return newCurrentTask, nil
 }
+
+func (s *Service) DeleteCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	currentTask, _ := s.CurrentTask.GetCurrentTaskByID(currentTaskID)
+
+	if len(currentTask.ID) < 1 {
+		return nil, errors.New("current task not found")
+	}
+
+	if currentTask.UserID != user.ID {
+		return nil, errors.New("authorization failed")
+	}
+
+	deletedCurrentTask, err := s.CurrentTask.DeleteCurrentTaskById(currentTaskID)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	newCurrentTaskHistory := &model.CurrentTaskHistory{
+		UserID:        currentTask.UserID,
+		CurrentTaskID: currentTask.ID,
+		Type:          "CANCEL",
+	}
+
+	s.CurrentTaskHistory.CreateCurrentTaskHistory(newCurrentTaskHistory)
+
+	return deletedCurrentTask, nil
+}
