@@ -50,14 +50,14 @@ CREATE TABLE "task" (
   OIDS=FALSE
 );
 -- Current Task Fields
--- status: 0: Not started, 1: started, 2: finished, 3: canceled 
+-- status: 0: Not started, 1: started, 2: finished 
 
 CREATE TABLE "current_task" (
 	"id" uuid NOT NULL DEFAULT uuid_generate_v4(),
 	"user_id" uuid NOT NULL,
 	"task_id" uuid NOT NULL,
 	"default_coins" integer NOT NULL,
-	"coins" integer,
+	"coins" integer NOT NULL DEFAULT 0,
 	"status" integer NOT NULL DEFAULT 0,
 	"description" TEXT,
 	"active" BOOLEAN DEFAULT FALSE,
