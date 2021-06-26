@@ -22,6 +22,18 @@ func (c *CurrentTask) GetCurrentTaskByID(id string) (*model.CurrentTask, error) 
 	return c.GetCurrentTaskByField("id", id)
 }
 
+func (c *CurrentTask) GetCurrentTasksByUserId(userId string) ([]*model.CurrentTask, error) {
+	var currentTasks []*model.CurrentTask
+	err := c.DB.Model(&currentTasks).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	return currentTasks, err
+}
+
+func (c *CurrentTask) GetActiveCurrentTaskByUserId(userId string) (*model.CurrentTask, error) {
+	var currentTask model.CurrentTask
+	err := c.DB.Model(&currentTask).Where("user_id = ?", userId).Where("active = ?", true).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	return &currentTask, err
+}
+
 func (c *CurrentTask) CreateCurrentTask(currentTask *model.CurrentTask) (*model.CurrentTask, error) {
 	_, err := c.DB.Model(currentTask).Returning("*").Insert()
 	return currentTask, err

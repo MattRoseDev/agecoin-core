@@ -35,7 +35,7 @@ func (r *mutationResolver) FinishCurrentTask(ctx context.Context, currentTaskID 
 }
 
 func (r *queryResolver) GetCurrentTasks(ctx context.Context) ([]*model.CurrentTask, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.Service.GetCurrentTasks(ctx)
 }
 
 func (r *queryResolver) GetCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
