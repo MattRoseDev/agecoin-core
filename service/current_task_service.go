@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/favecode/agecoin-core/graph/model"
 	"github.com/favecode/agecoin-core/middleware"
@@ -48,8 +47,6 @@ func (s *Service) AddCurrentTask(ctx context.Context, input model.AddCurrentTask
 		UserID:       user.ID,
 		DefaultCoins: task.DefaultCoins,
 	}
-
-	fmt.Println(currentTask)
 
 	s.CurrentTask.CreateCurrentTask(currentTask)
 
@@ -195,4 +192,28 @@ func (s *Service) DeleteCurrentTask(ctx context.Context, currentTaskID string) (
 	s.saveCurrentTaskHistory(currentTask, "CANCEL")
 
 	return deletedCurrentTask, nil
+}
+
+func (s *Service) GetCurrentTasks(ctx context.Context) ([]*model.CurrentTask, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	activeCurrentTask, _ := s.CurrentTask.GetActiveCurrentTaskByUserId(user.ID)
+
+	if activeCurrentTask != nil {
+		coins := s.getCurrentTaskCoins(activeCurrentTask.ID)
+		activeCurrentTask.Coins = &coins
+		s.CurrentTask.UpdateCurrentTaskById(activeCurrentTask)
+	}
+
+	currentTasks, err := s.CurrentTask.GetCurrentTasksByUserId(user.ID)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	return currentTasks, nil
 }
