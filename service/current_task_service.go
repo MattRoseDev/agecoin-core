@@ -3,11 +3,32 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/favecode/agecoin-core/graph/model"
 	"github.com/favecode/agecoin-core/middleware"
 	"github.com/favecode/agecoin-core/util"
 )
+
+func (s *Service) saveCurrentTaskHistory(currentTask *model.CurrentTask, historyType string) {
+	currentTaskHistory := &model.CurrentTaskHistory{
+		UserID:        currentTask.UserID,
+		CurrentTaskID: currentTask.ID,
+		Type:          historyType,
+	}
+
+	s.CurrentTaskHistory.CreateCurrentTaskHistory(currentTaskHistory)
+}
+
+func (s *Service) getCurrentTaskCoins(currentTaskID string) int {
+	currentTaskHistory, _ := s.CurrentTaskHistory.GetCurrentTaskHistoryByCurrentTaskId(currentTaskID)
+
+	if len(currentTaskHistory.ID) < 1 {
+		return 0
+	} else {
+		return util.CalculateCurrentTaskCoins(currentTaskHistory.CreatedAt)
+	}
+}
 
 func (s *Service) AddCurrentTask(ctx context.Context, input model.AddCurrentTaskInput) (*model.CurrentTask, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
@@ -27,6 +48,8 @@ func (s *Service) AddCurrentTask(ctx context.Context, input model.AddCurrentTask
 		UserID:       user.ID,
 		DefaultCoins: task.DefaultCoins,
 	}
+
+	fmt.Println(currentTask)
 
 	s.CurrentTask.CreateCurrentTask(currentTask)
 
@@ -50,6 +73,10 @@ func (s *Service) StartCurrentTask(ctx context.Context, currentTaskID string) (*
 		return nil, errors.New("current task is active")
 	}
 
+	if currentTask.Status == 2 {
+		return nil, errors.New("current task is finished")
+	}
+
 	s.CurrentTask.DeactiveAllCurrentTaskByUserId(user.ID)
 
 	currentTask.Active = true
@@ -61,13 +88,7 @@ func (s *Service) StartCurrentTask(ctx context.Context, currentTaskID string) (*
 		return nil, errors.New(err.Error())
 	}
 
-	currentTaskHistory := &model.CurrentTaskHistory{
-		UserID:        currentTask.UserID,
-		CurrentTaskID: currentTask.ID,
-		Type:          "START",
-	}
-
-	s.CurrentTaskHistory.CreateCurrentTaskHistory(currentTaskHistory)
+	s.saveCurrentTaskHistory(currentTask, "START")
 
 	return newCurrentTask, nil
 }
@@ -105,13 +126,45 @@ func (s *Service) PauseCurrentTask(ctx context.Context, currentTaskID string) (*
 
 	s.CurrentTask.DeactiveAllCurrentTaskByUserId(user.ID)
 
-	newCurrentTaskHistory := &model.CurrentTaskHistory{
-		UserID:        currentTask.UserID,
-		CurrentTaskID: currentTask.ID,
-		Type:          "PAUSE",
+	s.saveCurrentTaskHistory(currentTask, "PAUSE")
+
+	return newCurrentTask, nil
+}
+
+func (s *Service) FinishCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
 	}
 
-	s.CurrentTaskHistory.CreateCurrentTaskHistory(newCurrentTaskHistory)
+	currentTask, _ := s.CurrentTask.GetCurrentTaskByID(currentTaskID)
+
+	if len(currentTask.ID) < 1 {
+		return nil, errors.New("current task not found")
+	}
+
+	if currentTask.Status == 2 {
+		return nil, errors.New("current task is finished")
+	}
+
+	if currentTask.Active == bool(true) {
+		coins := s.getCurrentTaskCoins(currentTask.ID)
+		currentTask.Active = bool(false)
+		currentTask.Coins = &coins
+	}
+
+	currentTask.Status = 2
+
+	newCurrentTask, err := s.CurrentTask.UpdateCurrentTaskById(currentTask)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	s.CurrentTask.DeactiveAllCurrentTaskByUserId(user.ID)
+
+	s.saveCurrentTaskHistory(currentTask, "FINISH")
 
 	return newCurrentTask, nil
 }
@@ -139,13 +192,7 @@ func (s *Service) DeleteCurrentTask(ctx context.Context, currentTaskID string) (
 		return nil, errors.New(err.Error())
 	}
 
-	newCurrentTaskHistory := &model.CurrentTaskHistory{
-		UserID:        currentTask.UserID,
-		CurrentTaskID: currentTask.ID,
-		Type:          "CANCEL",
-	}
-
-	s.CurrentTaskHistory.CreateCurrentTaskHistory(newCurrentTaskHistory)
+	s.saveCurrentTaskHistory(currentTask, "CANCEL")
 
 	return deletedCurrentTask, nil
 }
