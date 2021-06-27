@@ -17,5 +17,5 @@
 # vendor/
 
 /tmp
-.env
+# .env
 Makefile
