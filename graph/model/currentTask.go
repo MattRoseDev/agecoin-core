@@ -9,6 +9,7 @@ type CurrentTask struct {
 	ID           string     `json:"id"`
 	UserID       string     `json:"userId"`
 	TaskID       string     `json:"taskId"`
+	Title        *string    `json:"title"`
 	Description  *string    `json:"description"`
 	DefaultCoins int        `json:"defaultCoins"`
 	Coins        *int       `json:"coins"`
