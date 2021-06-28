@@ -50,3 +50,6 @@ models:
     model: github.com/favecode/agecoin-core/graph/model.Task
   CurrentTask:
     model: github.com/favecode/agecoin-core/graph/model.CurrentTask
+    fields:
+      task:
+        resolver: true

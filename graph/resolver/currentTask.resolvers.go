@@ -7,8 +7,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/favecode/agecoin-core/graph/generated"
 	"github.com/favecode/agecoin-core/graph/model"
 )
+
+func (r *currentTaskResolver) Task(ctx context.Context, obj *model.CurrentTask) (*model.Task, error) {
+	return r.Service.GetTask(ctx, obj.TaskID)
+}
 
 func (r *mutationResolver) AddCurrentTask(ctx context.Context, input model.AddCurrentTaskInput) (*model.CurrentTask, error) {
 	return r.Service.AddCurrentTask(ctx, input)
@@ -41,3 +46,8 @@ func (r *queryResolver) GetCurrentTasks(ctx context.Context) ([]*model.CurrentTa
 func (r *queryResolver) GetCurrentTask(ctx context.Context, currentTaskID string) (*model.CurrentTask, error) {
 	panic(fmt.Errorf("not implemented"))
 }
+
+// CurrentTask returns generated.CurrentTaskResolver implementation.
+func (r *Resolver) CurrentTask() generated.CurrentTaskResolver { return &currentTaskResolver{r} }
+
+type currentTaskResolver struct{ *Resolver }

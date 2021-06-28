@@ -59,6 +59,7 @@ CREATE TABLE "current_task" (
 	"default_coins" integer NOT NULL,
 	"coins" integer NOT NULL DEFAULT 0,
 	"status" integer NOT NULL DEFAULT 0,
+	"title" TEXT,
 	"description" TEXT,
 	"active" BOOLEAN DEFAULT FALSE,
 	"created_at" TIMESTAMP NOT NULL DEFAULT (NOW()),
