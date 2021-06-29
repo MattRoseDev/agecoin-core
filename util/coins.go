@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func CalculateCurrentTaskCoins(t time.Time) int {
+func CalculateTaskCoins(t time.Time) int {
 	now := time.Now().Unix()
 	result := now - t.Unix()
 
