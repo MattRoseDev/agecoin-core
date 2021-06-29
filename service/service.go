@@ -12,17 +12,15 @@ type Service struct {
 	User               database.User
 	Password           database.Password
 	Task               database.Task
-	CurrentTask        database.CurrentTask
-	CurrentTaskHistory database.CurrentTaskHistory
+	TaskHistory database.TaskHistory
 }
 
 func New(service Service) *Service {
 	return &Service{
 		User:               service.User,
 		Password:           service.Password,
-		Task:               service.Task,
-		CurrentTask:        service.CurrentTask,
-		CurrentTaskHistory: service.CurrentTaskHistory,
+		Task:        service.Task,
+		TaskHistory: service.TaskHistory,
 	}
 }
 

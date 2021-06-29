@@ -12,14 +12,29 @@ type Task struct {
 	DB *pg.DB
 }
 
-func (t *Task) GetTaskByField(field, value string) (*model.Task, error) {
+func (c *Task) GetTaskByField(field, value string) (*model.Task, error) {
 	var task model.Task
-	err := t.DB.Model(&task).Where(fmt.Sprintf("%v = ?", field), value).Where("deleted_at is ?", nil).First()
+	err := c.DB.Model(&task).Where(fmt.Sprintf("%v = ?", field), value).Where("deleted_at is ?", nil).First()
 	return &task, err
 }
 
-func (t *Task) GetTaskByID(id string) (*model.Task, error) {
-	return t.GetTaskByField("id", id)
+func (c *Task) GetTaskByID(id string) (*model.Task, error) {
+	return c.GetTaskByField("id", id)
+}
+
+func (c *Task) GetTasksByUserId(userId string, filter *model.GetTasksFilter) ([]*model.Task, error) {
+	var tasks []*model.Task
+	query := c.DB.Model(&tasks).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*")
+
+	if filter != nil {
+		if filter.Status != nil {
+			query.Where("status = ?", filter.Status)
+		}
+	}
+
+	err := query.Select()
+
+	return tasks, err
 }
 
 func (t *Task) GetTaskByUserIdAndID(userId string, id string) (*model.Task, error) {
@@ -28,28 +43,34 @@ func (t *Task) GetTaskByUserIdAndID(userId string, id string) (*model.Task, erro
 	return &task, err
 }
 
-func (t *Task) CreateTask(task *model.Task) (*model.Task, error) {
-	_, err := t.DB.Model(task).Returning("*").Insert()
+func (c *Task) GetActiveTaskByUserId(userId string) (*model.Task, error) {
+	var task model.Task
+	err := c.DB.Model(&task).Where("user_id = ?", userId).Where("active = ?", true).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	return &task, err
+}
+
+func (c *Task) CreateTask(task *model.Task) (*model.Task, error) {
+	_, err := c.DB.Model(task).Returning("*").Insert()
 	return task, err
 }
 
-func (t *Task) GetTasksByUserId(userId string) ([]*model.Task, error) {
+func (c *Task) DeactiveAllTaskByUserId(userId string) ([]*model.Task, error) {
 	var tasks []*model.Task
-	err := t.DB.Model(&tasks).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	_, err := c.DB.Model(&tasks).Set("active = ?", false).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Returning("*").Update()
 	return tasks, err
 }
 
-func (t *Task) UpdateTaskById(task *model.Task) (*model.Task, error) {
-	_, err := t.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
+func (c *Task) UpdateTaskById(task *model.Task) (*model.Task, error) {
+	_, err := c.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
 	return task, err
 }
 
-func (t *Task) DeleteTaskById(taskId string) (*model.Task, error) {
+func (c *Task) DeleteTaskById(taskId string) (*model.Task, error) {
 	DeletedAt := time.Now()
 	var task = &model.Task{
 		ID:        taskId,
 		DeletedAt: &DeletedAt,
 	}
-	_, err := t.DB.Model(task).Set("deleted_at = ?deleted_at").Where("id = ?id").Where("deleted_at is ?", nil).Returning("*").Update()
+	_, err := c.DB.Model(task).Set("deleted_at = ?deleted_at").Where("id = ?id").Where("deleted_at is ?", nil).Returning("*").Update()
 	return task, err
 }
