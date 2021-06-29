@@ -171,7 +171,7 @@ func (s *Service) PauseTask(ctx context.Context, taskID string) (*model.Task, er
 	return newTask, nil
 }
 
-func (s *Service) FinishTask(ctx context.Context, taskID string) (*model.Task, error) {
+func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.FinishTaskInput) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 
 	if err != nil {
@@ -184,17 +184,31 @@ func (s *Service) FinishTask(ctx context.Context, taskID string) (*model.Task, e
 		return nil, errors.New("task not found")
 	}
 
-	if task.Status == 2 {
-		return nil, errors.New("task is finished")
+	if task.Status == 2 && input == nil {
+		return task, nil
 	}
 
 	if task.Active == bool(true) {
-		coins := s.getTaskCoins(task.ID)
+		if input.Coins == nil {
+			coins := s.getTaskCoins(task.ID) + *task.Coins
+			task.Coins = &coins
+		}
 		task.Active = bool(false)
-		task.Coins = &coins
 	}
 
 	task.Status = 2
+
+	if input.Title != nil {
+		task.Title = *input.Title
+	}
+
+	if input.Description != nil {
+		task.Description = input.Description
+	}
+
+	if input.Coins != nil {
+		task.Coins = input.Coins
+	}
 
 	newTask, err := s.Task.UpdateTaskById(task)
 

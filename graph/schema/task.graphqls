@@ -28,6 +28,12 @@ input EditTaskInput {
   coins: Int
 }
 
+input FinishTaskInput {
+  title: String
+  description: String
+  coins: Int
+}
+
 extend type Query {
   getTasks(filter: GetTasksFilter): [Task]
   getTask(taskId: ID!): Task
@@ -39,5 +45,5 @@ extend type Mutation {
   deleteTask(taskId: ID!): Task
   startTask(taskId: ID!): Task
   pauseTask(taskId: ID!): Task
-  finishTask(taskId: ID!): Task
+  finishTask(taskId: ID!, input: FinishTaskInput): Task
 }
