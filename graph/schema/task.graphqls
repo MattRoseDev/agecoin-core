@@ -4,6 +4,9 @@ type Task {
   title: String!
   description: String
   defaultCoins: Int!
+  coins: Int
+  status: Int!
+  active: Boolean!
   createdAt: Time!
   updatedAt: Time!
 }
@@ -14,14 +17,25 @@ input AddTaskInput {
   defaultCoins: Int!
 }
 
+input GetTasksFilter {
+  status: Int
+}
+
 input EditTaskInput {
   title: String
   description: String
   defaultCoins: Int
+  coins: Int
+}
+
+input FinishTaskInput {
+  title: String
+  description: String
+  coins: Int
 }
 
 extend type Query {
-  getTasks: [Task]
+  getTasks(filter: GetTasksFilter): [Task]
   getTask(taskId: ID!): Task
 }
 
@@ -29,4 +43,7 @@ extend type Mutation {
   addTask(input: AddTaskInput!): Task
   editTask(taskId: ID!, input: EditTaskInput!): Task
   deleteTask(taskId: ID!): Task
+  startTask(taskId: ID!): Task
+  pauseTask(taskId: ID!): Task
+  finishTask(taskId: ID!, input: FinishTaskInput): Task
 }

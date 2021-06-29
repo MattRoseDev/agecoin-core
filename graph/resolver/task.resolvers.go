@@ -21,8 +21,20 @@ func (r *mutationResolver) DeleteTask(ctx context.Context, taskID string) (*mode
 	return r.Service.DeleteTask(ctx, taskID)
 }
 
-func (r *queryResolver) GetTasks(ctx context.Context) ([]*model.Task, error) {
-	return r.Service.GetTasks(ctx)
+func (r *mutationResolver) StartTask(ctx context.Context, taskID string) (*model.Task, error) {
+	return r.Service.StartTask(ctx, taskID)
+}
+
+func (r *mutationResolver) PauseTask(ctx context.Context, taskID string) (*model.Task, error) {
+	return r.Service.PauseTask(ctx, taskID)
+}
+
+func (r *mutationResolver) FinishTask(ctx context.Context, taskID string, input *model.FinishTaskInput) (*model.Task, error) {
+	return r.Service.FinishTask(ctx, taskID, input)
+}
+
+func (r *queryResolver) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([]*model.Task, error) {
+	return r.Service.GetTasks(ctx, filter)
 }
 
 func (r *queryResolver) GetTask(ctx context.Context, taskID string) (*model.Task, error) {

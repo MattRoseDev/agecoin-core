@@ -6,10 +6,6 @@ import (
 	"time"
 )
 
-type AddCurrentTaskInput struct {
-	TaskID string `json:"taskId"`
-}
-
 type AddTaskInput struct {
 	Title        string  `json:"title"`
 	Description  *string `json:"description"`
@@ -26,16 +22,21 @@ type AuthToken struct {
 	ExpiredAt time.Time `json:"expiredAt"`
 }
 
-type EditCurrentTaskInput struct {
-	TaskID       string  `json:"taskId"`
-	Description  *string `json:"description"`
-	DefaultCoins *int    `json:"defaultCoins"`
-}
-
 type EditTaskInput struct {
 	Title        *string `json:"title"`
 	Description  *string `json:"description"`
 	DefaultCoins *int    `json:"defaultCoins"`
+	Coins        *int    `json:"coins"`
+}
+
+type FinishTaskInput struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+	Coins       *int    `json:"coins"`
+}
+
+type GetTasksFilter struct {
+	Status *int `json:"status"`
 }
 
 type LoginInput struct {
