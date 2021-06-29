@@ -58,7 +58,7 @@ type ComplexityRoot struct {
 		AddTask    func(childComplexity int, input model.AddTaskInput) int
 		DeleteTask func(childComplexity int, taskID string) int
 		EditTask   func(childComplexity int, taskID string, input model.EditTaskInput) int
-		FinishTask func(childComplexity int, taskID string) int
+		FinishTask func(childComplexity int, taskID string, input *model.FinishTaskInput) int
 		PauseTask  func(childComplexity int, taskID string) int
 		Register   func(childComplexity int, input model.RegisterInput) int
 		StartTask  func(childComplexity int, taskID string) int
@@ -111,7 +111,7 @@ type MutationResolver interface {
 	DeleteTask(ctx context.Context, taskID string) (*model.Task, error)
 	StartTask(ctx context.Context, taskID string) (*model.Task, error)
 	PauseTask(ctx context.Context, taskID string) (*model.Task, error)
-	FinishTask(ctx context.Context, taskID string) (*model.Task, error)
+	FinishTask(ctx context.Context, taskID string, input *model.FinishTaskInput) (*model.Task, error)
 }
 type QueryResolver interface {
 	Test(ctx context.Context, input model.TestInput) (*model.Test, error)
@@ -210,7 +210,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.FinishTask(childComplexity, args["taskId"].(string)), true
+		return e.complexity.Mutation.FinishTask(childComplexity, args["taskId"].(string), args["input"].(*model.FinishTaskInput)), true
 
 	case "Mutation.pauseTask":
 		if e.complexity.Mutation.PauseTask == nil {
@@ -596,6 +596,12 @@ input EditTaskInput {
   coins: Int
 }
 
+input FinishTaskInput {
+  title: String
+  description: String
+  coins: Int
+}
+
 extend type Query {
   getTasks(filter: GetTasksFilter): [Task]
   getTask(taskId: ID!): Task
@@ -607,7 +613,7 @@ extend type Mutation {
   deleteTask(taskId: ID!): Task
   startTask(taskId: ID!): Task
   pauseTask(taskId: ID!): Task
-  finishTask(taskId: ID!): Task
+  finishTask(taskId: ID!, input: FinishTaskInput): Task
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/user.graphqls", Input: `type User {
@@ -699,6 +705,15 @@ func (ec *executionContext) field_Mutation_finishTask_args(ctx context.Context, 
 		}
 	}
 	args["taskId"] = arg0
+	var arg1 *model.FinishTaskInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalOFinishTaskInput2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐFinishTaskInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
 	return args, nil
 }
 
@@ -1316,7 +1331,7 @@ func (ec *executionContext) _Mutation_finishTask(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().FinishTask(rctx, args["taskId"].(string))
+		return ec.resolvers.Mutation().FinishTask(rctx, args["taskId"].(string), args["input"].(*model.FinishTaskInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3444,6 +3459,42 @@ func (ec *executionContext) unmarshalInputEditTaskInput(ctx context.Context, obj
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputFinishTaskInput(ctx context.Context, obj interface{}) (model.FinishTaskInput, error) {
+	var it model.FinishTaskInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "coins":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("coins"))
+			it.Coins, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGetTasksFilter(ctx context.Context, obj interface{}) (model.GetTasksFilter, error) {
 	var it model.GetTasksFilter
 	var asMap = obj.(map[string]interface{})
@@ -4538,6 +4589,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) unmarshalOFinishTaskInput2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐFinishTaskInput(ctx context.Context, v interface{}) (*model.FinishTaskInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputFinishTaskInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOGetTasksFilter2ᚖgithubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐGetTasksFilter(ctx context.Context, v interface{}) (*model.GetTasksFilter, error) {

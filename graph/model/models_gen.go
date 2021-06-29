@@ -29,6 +29,12 @@ type EditTaskInput struct {
 	Coins        *int    `json:"coins"`
 }
 
+type FinishTaskInput struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+	Coins       *int    `json:"coins"`
+}
+
 type GetTasksFilter struct {
 	Status *int `json:"status"`
 }

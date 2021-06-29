@@ -29,8 +29,8 @@ func (r *mutationResolver) PauseTask(ctx context.Context, taskID string) (*model
 	return r.Service.PauseTask(ctx, taskID)
 }
 
-func (r *mutationResolver) FinishTask(ctx context.Context, taskID string) (*model.Task, error) {
-	return r.Service.FinishTask(ctx, taskID)
+func (r *mutationResolver) FinishTask(ctx context.Context, taskID string, input *model.FinishTaskInput) (*model.Task, error) {
+	return r.Service.FinishTask(ctx, taskID, input)
 }
 
 func (r *queryResolver) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([]*model.Task, error) {
