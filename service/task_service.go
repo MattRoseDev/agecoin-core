@@ -83,7 +83,7 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditT
 	}
 
 	if input.Coins != nil {
-		task.Coins = input.Coins
+		task.Coins = *input.Coins
 		didUpdate = true
 	}
 
@@ -156,7 +156,7 @@ func (s *Service) PauseTask(ctx context.Context, taskID string) (*model.Task, er
 
 	task.Active = bool(false)
 	task.Status = 1
-	task.Coins = &coins
+	task.Coins = coins
 
 	newTask, err := s.Task.UpdateTaskById(task)
 
@@ -190,8 +190,8 @@ func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.Fi
 
 	if task.Active == bool(true) {
 		if input.Coins == nil {
-			coins := s.getTaskCoins(task.ID) + *task.Coins
-			task.Coins = &coins
+			coins := s.getTaskCoins(task.ID) + task.Coins
+			task.Coins = coins
 		}
 		task.Active = bool(false)
 	}
@@ -207,7 +207,7 @@ func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.Fi
 	}
 
 	if input.Coins != nil {
-		task.Coins = input.Coins
+		task.Coins = *input.Coins
 	}
 
 	newTask, err := s.Task.UpdateTaskById(task)
@@ -262,7 +262,7 @@ func (s *Service) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([
 
 	if activeTask != nil {
 		coins := s.getTaskCoins(activeTask.ID)
-		activeTask.Coins = &coins
+		activeTask.Coins = coins
 		s.Task.UpdateTaskById(activeTask)
 	}
 

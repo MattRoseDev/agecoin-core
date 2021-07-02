@@ -4,7 +4,7 @@ type Task {
   title: String!
   description: String
   defaultCoins: Int!
-  coins: Int
+  coins: Int!
   status: Int!
   active: Boolean!
   createdAt: Time!
