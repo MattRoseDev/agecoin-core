@@ -88,7 +88,7 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditT
 	}
 
 	if !didUpdate {
-		return nil, errors.New("no update done")
+		return task, nil
 	}
 
 	newTask, err := s.Task.UpdateTaskById(task)
