@@ -13,7 +13,7 @@ type Password struct {
 	Password  string     `json:"password"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
-	DeletedAt *time.Time `json:"-" pg:",soft_delete"`
+	DeletedAt *time.Time `json:"-" sql:",soft_delete"`
 }
 
 func (p *Password) HashPassword(password string) error {
