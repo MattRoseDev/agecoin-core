@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/favecode/agecoin-core/graph/model"
 	"github.com/favecode/agecoin-core/middleware"
-	"github.com/favecode/agecoin-core/util"
 )
 
 func (s *Service) saveTaskHistory(task *model.Task, historyType string) {
@@ -20,13 +20,27 @@ func (s *Service) saveTaskHistory(task *model.Task, historyType string) {
 }
 
 func (s *Service) getTaskCoins(taskID string) int {
-	taskHistory, _ := s.TaskHistory.GetTaskHistoryByTaskId(taskID)
+	taskHistory, _ := s.TaskHistory.GetTaskHistoryByTaskIdAndType(taskID, []string{"START", "PAUSE", "FINISH"})
 
-	if len(taskHistory.ID) < 1 {
+	if len(taskHistory) < 1 {
 		return 0
-	} else {
-		return util.CalculateTaskCoins(taskHistory.CreatedAt)
 	}
+
+	var totalTime int
+	for i, t := range taskHistory {
+		if t.Type == "START" && i+1 < len(taskHistory) {
+			partTime := int(taskHistory[i+1].CreatedAt.Unix()) - int(t.CreatedAt.Unix())
+			totalTime = totalTime + partTime
+		}
+	}
+
+	lastItem := taskHistory[len(taskHistory)-1]
+
+	if lastItem.Type == "START" {
+		totalTime = totalTime + int(time.Now().Unix()) - int(lastItem.CreatedAt.Unix())
+	}
+
+	return totalTime / 60
 }
 
 func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model.Task, error) {
@@ -150,9 +164,7 @@ func (s *Service) PauseTask(ctx context.Context, taskID string) (*model.Task, er
 		return nil, errors.New("task is not active")
 	}
 
-	taskHistory, _ := s.TaskHistory.GetTaskHistoryByTaskId(taskID)
-
-	coins := util.CalculateTaskCoins(taskHistory.CreatedAt)
+	coins := s.getTaskCoins(taskID)
 
 	task.Active = bool(false)
 	task.Status = 1
@@ -190,7 +202,7 @@ func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.Fi
 
 	if task.Active == bool(true) {
 		if input.Coins == nil {
-			coins := s.getTaskCoins(task.ID) + task.Coins
+			coins := s.getTaskCoins(task.ID)
 			task.Coins = coins
 		}
 		task.Active = bool(false)
@@ -273,24 +285,4 @@ func (s *Service) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([
 	}
 
 	return tasks, nil
-}
-
-func (s *Service) GetTask(ctx context.Context, taskID string) (*model.Task, error) {
-	user, err := middleware.GetCurrentUserFromCTX(ctx)
-
-	if err != nil {
-		return nil, errors.New(err.Error())
-	}
-
-	task, err := s.Task.GetTaskByUserIdAndID(user.ID, taskID)
-
-	if len(task.ID) == 0 {
-		return nil, errors.New("task not found")
-	}
-
-	if err != nil {
-		return nil, errors.New(err.Error())
-	}
-
-	return task, nil
 }
