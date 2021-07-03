@@ -4,8 +4,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Enums 
 DROP TYPE IF EXISTS "user_roles";
 DROP TYPE IF EXISTS "task_history_type";
-CREATE TYPE user_roles AS ENUM ('USER', 'ADMIN');
-CREATE TYPE task_history_type AS ENUM ('START', 'PAUSE', 'FINISH', 'CANCEL');
+CREATE TYPE user_roles AS ENUM ("USER", "ADMIN");
+CREATE TYPE task_history_type AS ENUM ("START", "PAUSE", "FINISH", "CANCEL");
 
 -- Tables
 CREATE TABLE "user" (
