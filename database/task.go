@@ -54,9 +54,9 @@ func (c *Task) CreateTask(task *model.Task) (*model.Task, error) {
 	return task, err
 }
 
-func (c *Task) DeactiveAllTaskByUserId(userId string) ([]*model.Task, error) {
+func (c *Task) DeactiveTaskByUserIdAndTaskId(userId string, taskId string) ([]*model.Task, error) {
 	var tasks []*model.Task
-	_, err := c.DB.Model(&tasks).Set("active = ?", false).Where("user_id = ?", userId).Where("deleted_at is ?", nil).Returning("*").Update()
+	_, err := c.DB.Model(&tasks).Set("active = ?", false).Where("user_id = ?", userId).Where("id = ?", taskId).Where("deleted_at is ?", nil).Returning("*").Update()
 	return tasks, err
 }
 
