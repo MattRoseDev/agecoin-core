@@ -131,7 +131,12 @@ func (s *Service) StartTask(ctx context.Context, taskID string) (*model.Task, er
 		return nil, errors.New("task is active")
 	}
 
-	s.Task.DeactiveAllTaskByUserId(user.ID)
+	activeTask, _ := s.Task.GetActiveTaskByUserId(user.ID)
+
+	if len(activeTask.ID) > 0 {
+		s.saveTaskHistory(activeTask, "PAUSE")
+		s.Task.DeactiveTaskByUserIdAndTaskId(user.ID, activeTask.ID)
+	}
 
 	task.Active = true
 	task.Status = 1
@@ -176,7 +181,7 @@ func (s *Service) PauseTask(ctx context.Context, taskID string) (*model.Task, er
 		return nil, errors.New(err.Error())
 	}
 
-	s.Task.DeactiveAllTaskByUserId(user.ID)
+	s.Task.DeactiveTaskByUserIdAndTaskId(user.ID, taskID)
 
 	s.saveTaskHistory(task, "PAUSE")
 
@@ -228,7 +233,7 @@ func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.Fi
 		return nil, errors.New(err.Error())
 	}
 
-	s.Task.DeactiveAllTaskByUserId(user.ID)
+	s.Task.DeactiveTaskByUserIdAndTaskId(user.ID, taskID)
 
 	s.saveTaskHistory(task, "FINISH")
 
