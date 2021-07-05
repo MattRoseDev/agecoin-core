@@ -34,6 +34,10 @@ func (r *mutationResolver) FinishTask(ctx context.Context, taskID string, input 
 	return r.Service.FinishTask(ctx, taskID, input)
 }
 
+func (r *mutationResolver) ArchiveTask(ctx context.Context, taskID string) (*model.Task, error) {
+	return r.Service.ArchiveTask(ctx, taskID)
+}
+
 func (r *queryResolver) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([]*model.Task, error) {
 	return r.Service.GetTasks(ctx, filter)
 }
