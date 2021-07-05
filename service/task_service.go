@@ -30,17 +30,17 @@ func (s *Service) getTaskCoins(taskID string) int {
 	for i, t := range taskHistory {
 		if t.Type == "START" && i+1 < len(taskHistory) {
 			partTime := int(taskHistory[i+1].CreatedAt.Unix()) - int(t.CreatedAt.Unix())
-			totalTime = totalTime + partTime
+			totalTime += partTime
 		}
 	}
 
 	lastItem := taskHistory[len(taskHistory)-1]
 
 	if lastItem.Type == "START" {
-		totalTime = totalTime + int(time.Now().Unix()) - int(lastItem.CreatedAt.Unix())
+		totalTime += int(time.Now().Unix()) - int(lastItem.CreatedAt.Unix())
 	}
 
-	return totalTime / 60
+	return totalTime
 }
 
 func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model.Task, error) {
@@ -62,7 +62,7 @@ func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model
 	return task, nil
 }
 
-func (s *Service) EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error) {
+func (s *Service) EditTask(ctx context.Context, taskID string, input *model.EditTaskInput) (*model.Task, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 
 	if err != nil {
@@ -238,6 +238,40 @@ func (s *Service) FinishTask(ctx context.Context, taskID string, input *model.Fi
 	s.saveTaskHistory(task, "FINISH")
 
 	return newTask, nil
+}
+
+func (s *Service) ArchiveTask(ctx context.Context, taskID string) (*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	task, _ := s.Task.GetTaskByID(taskID)
+
+	if len(task.ID) < 1 {
+		return nil, errors.New("task not found")
+	}
+
+	if task.UserID != user.ID {
+		return nil, errors.New("authorization failed")
+	}
+
+	if task.Status != 2 || task.Active == bool(true) {
+		return nil, errors.New("task is not finished")
+	}
+
+	task.Status = 3
+
+	archivedTask, err := s.Task.UpdateTaskById(task)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	s.saveTaskHistory(task, "ARCHIVE")
+
+	return archivedTask, nil
 }
 
 func (s *Service) DeleteTask(ctx context.Context, taskID string) (*model.Task, error) {

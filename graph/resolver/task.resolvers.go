@@ -14,7 +14,7 @@ func (r *mutationResolver) AddTask(ctx context.Context, input model.AddTaskInput
 	return r.Service.AddTask(ctx, input)
 }
 
-func (r *mutationResolver) EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error) {
+func (r *mutationResolver) EditTask(ctx context.Context, taskID string, input *model.EditTaskInput) (*model.Task, error) {
 	return r.Service.EditTask(ctx, taskID, input)
 }
 
@@ -32,6 +32,10 @@ func (r *mutationResolver) PauseTask(ctx context.Context, taskID string) (*model
 
 func (r *mutationResolver) FinishTask(ctx context.Context, taskID string, input *model.FinishTaskInput) (*model.Task, error) {
 	return r.Service.FinishTask(ctx, taskID, input)
+}
+
+func (r *mutationResolver) ArchiveTask(ctx context.Context, taskID string) (*model.Task, error) {
+	return r.Service.ArchiveTask(ctx, taskID)
 }
 
 func (r *queryResolver) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([]*model.Task, error) {
