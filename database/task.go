@@ -46,6 +46,9 @@ func (t *Task) GetTaskByUserIdAndID(userId string, id string) (*model.Task, erro
 func (c *Task) GetActiveTaskByUserId(userId string) (*model.Task, error) {
 	var task model.Task
 	err := c.DB.Model(&task).Where("user_id = ?", userId).Where("active = ?", true).Where("deleted_at is ?", nil).Order("created_at DESC").Returning("*").Select()
+	if len(task.ID) < 1 {
+		return nil, nil
+	}
 	return &task, err
 }
 

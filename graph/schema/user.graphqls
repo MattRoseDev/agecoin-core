@@ -10,6 +10,14 @@ type User {
   updatedAt: Time!
 }
 
+type DailyCoins {
+  remainingCoins: Int!
+  savedCoins: Int!
+  wastedCoins: Int!
+  activeTask: Task
+}
+
 extend type Query {
   getUserInfo: User!
+  getDailyCoins: DailyCoins
 }
