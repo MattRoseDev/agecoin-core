@@ -22,6 +22,13 @@ type AuthToken struct {
 	ExpiredAt time.Time `json:"expiredAt"`
 }
 
+type DailyCoins struct {
+	RemainingCoins int   `json:"remainingCoins"`
+	SavedCoins     int   `json:"savedCoins"`
+	WastedCoins    int   `json:"wastedCoins"`
+	ActiveTask     *Task `json:"activeTask"`
+}
+
 type EditTaskInput struct {
 	Title        *string `json:"title"`
 	Description  *string `json:"description"`

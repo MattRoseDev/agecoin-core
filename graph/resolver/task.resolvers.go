@@ -14,7 +14,7 @@ func (r *mutationResolver) AddTask(ctx context.Context, input model.AddTaskInput
 	return r.Service.AddTask(ctx, input)
 }
 
-func (r *mutationResolver) EditTask(ctx context.Context, taskID string, input model.EditTaskInput) (*model.Task, error) {
+func (r *mutationResolver) EditTask(ctx context.Context, taskID string, input *model.EditTaskInput) (*model.Task, error) {
 	return r.Service.EditTask(ctx, taskID, input)
 }
 

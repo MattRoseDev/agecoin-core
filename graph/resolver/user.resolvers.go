@@ -12,3 +12,7 @@ import (
 func (r *queryResolver) GetUserInfo(ctx context.Context) (*model.User, error) {
 	return r.Service.GetUserInfo(ctx)
 }
+
+func (r *queryResolver) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) {
+	return r.Service.GetDailyCoins(ctx)
+}
