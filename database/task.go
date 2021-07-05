@@ -29,6 +29,8 @@ func (c *Task) GetTasksByUserId(userId string, filter *model.GetTasksFilter) ([]
 	if filter != nil {
 		if filter.Status != nil {
 			query.Where("status = ?", filter.Status)
+		} else {
+			query.Where("status < ?", 3)
 		}
 	}
 

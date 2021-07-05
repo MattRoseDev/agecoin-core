@@ -46,4 +46,5 @@ extend type Mutation {
   startTask(taskId: ID!): Task
   pauseTask(taskId: ID!): Task
   finishTask(taskId: ID!, input: FinishTaskInput): Task
+  archiveTask(taskId: ID!): Task
 }
