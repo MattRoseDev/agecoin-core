@@ -54,7 +54,7 @@ func (s *Service) AddTask(ctx context.Context, input model.AddTaskInput) (*model
 		UserID:       user.ID,
 		Title:        input.Title,
 		Description:  input.Description,
-		DefaultCoins: input.DefaultCoins,
+		DefaultCoins: input.DefaultCoins * 60,
 	}
 
 	s.Task.CreateTask(task)
@@ -92,7 +92,7 @@ func (s *Service) EditTask(ctx context.Context, taskID string, input *model.Edit
 	}
 
 	if input.DefaultCoins != nil {
-		task.DefaultCoins = *input.DefaultCoins
+		task.DefaultCoins = *input.DefaultCoins * 60
 		didUpdate = true
 	}
 
