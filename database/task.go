@@ -66,7 +66,7 @@ func (c *Task) DeactiveTaskByUserIdAndTaskId(userId string, taskId string) ([]*m
 }
 
 func (c *Task) UpdateTaskById(task *model.Task) (*model.Task, error) {
-	_, err := c.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
+	_, err := c.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").UpdateNotNull()
 	return task, err
 }
 
