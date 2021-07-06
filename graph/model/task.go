@@ -13,7 +13,7 @@ type Task struct {
 	DefaultCoins int        `json:"defaultCoins" sql:",notnull"`
 	Coins        int        `json:"coins" sql:",notnull"`
 	Status       int        `json:"status" sql:",notnull"`
-	Active       bool       `json:"active" sql:",use_zero"`
+	Active       bool       `json:"active" sql:",use_zero,notnull"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	UpdatedAt    time.Time  `json:"updatedAt"`
 	DeletedAt    *time.Time `json:"-" sql:",soft_delete"`
