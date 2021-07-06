@@ -645,6 +645,7 @@ input AddTaskInput {
 
 input GetTasksFilter {
   status: Int
+  daily: Boolean
 }
 
 input EditTaskInput {
@@ -3799,6 +3800,14 @@ func (ec *executionContext) unmarshalInputGetTasksFilter(ctx context.Context, ob
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
 			it.Status, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "daily":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("daily"))
+			it.Daily, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
