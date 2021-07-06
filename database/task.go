@@ -32,6 +32,11 @@ func (c *Task) GetTasksByUserId(userId string, filter *model.GetTasksFilter) ([]
 		} else {
 			query.Where("status < ?", 3)
 		}
+
+		if filter.Daily != nil && *filter.Daily == bool(true) {
+			fmt.Println(time.Now().Format("2006-01-02"))
+			query.Where("created_at >= ?", time.Now().Format("2006-01-02"))
+		}
 	}
 
 	err := query.Select()
@@ -66,7 +71,7 @@ func (c *Task) DeactiveTaskByUserIdAndTaskId(userId string, taskId string) ([]*m
 }
 
 func (c *Task) UpdateTaskById(task *model.Task) (*model.Task, error) {
-	_, err := c.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").UpdateNotNull()
+	_, err := c.DB.Model(task).Where("id = ?", task.ID).Where("deleted_at is ?", nil).Returning("*").Update()
 	return task, err
 }
 

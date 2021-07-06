@@ -22,7 +22,11 @@ func (s *Service) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) 
 		return nil, errors.New(err.Error())
 	}
 
-	tasks, _ := s.GetTasks(ctx, &model.GetTasksFilter{})
+	daily := bool(true)
+
+	tasks, _ := s.GetTasks(ctx, &model.GetTasksFilter{
+		Daily: &daily,
+	})
 
 	savedCoins := 0
 
@@ -38,9 +42,9 @@ func (s *Service) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) 
 	activeTask, _ := s.Task.GetActiveTaskByUserId(user.ID)
 
 	return &model.DailyCoins{
-		SavedCoins:     savedCoins / 60,
-		RemainingCoins: remainingCoins / 60,
-		WastedCoins:    (spentCoins - savedCoins) / 60,
+		SavedCoins:     savedCoins,
+		RemainingCoins: remainingCoins,
+		WastedCoins:    (spentCoins - savedCoins),
 		ActiveTask:     activeTask,
 	}, nil
 }
