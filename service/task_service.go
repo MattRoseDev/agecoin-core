@@ -261,8 +261,8 @@ func (s *Service) ArchiveTask(ctx context.Context, taskID string) (*model.Task, 
 		return nil, errors.New("task is not finished")
 	}
 
+	task.Active = bool(false)
 	task.Status = 3
-	task.Active = false
 
 	archivedTask, err := s.Task.UpdateTaskById(task)
 
