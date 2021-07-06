@@ -326,3 +326,27 @@ func (s *Service) GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([
 
 	return tasks, nil
 }
+
+func (s *Service) GetTask(ctx context.Context, taskID string) (*model.Task, error) {
+	user, err := middleware.GetCurrentUserFromCTX(ctx)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	activeTask, _ := s.Task.GetActiveTaskByUserId(user.ID)
+
+	if activeTask != nil {
+		coins := s.getTaskCoins(activeTask.ID)
+		activeTask.Coins = coins
+		s.Task.UpdateTaskById(activeTask)
+	}
+
+	task, err := s.Task.GetTaskByUserIdAndID(user.ID, taskID)
+
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	return task, nil
+}
