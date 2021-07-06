@@ -133,7 +133,7 @@ func (s *Service) StartTask(ctx context.Context, taskID string) (*model.Task, er
 
 	activeTask, _ := s.Task.GetActiveTaskByUserId(user.ID)
 
-	if len(activeTask.ID) > 0 {
+	if activeTask != nil {
 		s.saveTaskHistory(activeTask, "PAUSE")
 		s.Task.DeactiveTaskByUserIdAndTaskId(user.ID, activeTask.ID)
 	}
@@ -261,6 +261,7 @@ func (s *Service) ArchiveTask(ctx context.Context, taskID string) (*model.Task, 
 		return nil, errors.New("task is not finished")
 	}
 
+	task.Active = bool(false)
 	task.Status = 3
 
 	archivedTask, err := s.Task.UpdateTaskById(task)

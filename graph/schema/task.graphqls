@@ -19,6 +19,7 @@ input AddTaskInput {
 
 input GetTasksFilter {
   status: Int
+  daily: Boolean
 }
 
 input EditTaskInput {
