@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/favecode/agecoin-core/graph/model"
@@ -31,7 +30,6 @@ func (s *Service) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) 
 	savedCoins := 0
 
 	for _, t := range tasks {
-		fmt.Println(t.Title)
 		savedCoins += t.Coins
 	}
 
