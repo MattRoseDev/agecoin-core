@@ -14,7 +14,7 @@ func (s *Service) GetUserInfo(ctx context.Context) (*model.User, error) {
 	return user, nil
 }
 
-func (s *Service) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) {
+func (s *Service) GetDailyCoins(ctx context.Context, input model.InputGetDailyCoins) (*model.DailyCoins, error) {
 	user, err := middleware.GetCurrentUserFromCTX(ctx)
 
 	if err != nil {
@@ -24,7 +24,8 @@ func (s *Service) GetDailyCoins(ctx context.Context) (*model.DailyCoins, error) 
 	daily := bool(true)
 
 	tasks, _ := s.GetTasks(ctx, &model.GetTasksFilter{
-		Daily: &daily,
+		Daily:          &daily,
+		TimezoneOffset: &input.TimezoneOffset,
 	})
 
 	savedCoins := 0

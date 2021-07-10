@@ -74,7 +74,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetDailyCoins func(childComplexity int) int
+		GetDailyCoins func(childComplexity int, input model.InputGetDailyCoins) int
 		GetTask       func(childComplexity int, taskID string) int
 		GetTasks      func(childComplexity int, filter *model.GetTasksFilter) int
 		GetUserInfo   func(childComplexity int) int
@@ -129,7 +129,7 @@ type QueryResolver interface {
 	GetTasks(ctx context.Context, filter *model.GetTasksFilter) ([]*model.Task, error)
 	GetTask(ctx context.Context, taskID string) (*model.Task, error)
 	GetUserInfo(ctx context.Context) (*model.User, error)
-	GetDailyCoins(ctx context.Context) (*model.DailyCoins, error)
+	GetDailyCoins(ctx context.Context, input model.InputGetDailyCoins) (*model.DailyCoins, error)
 }
 
 type executableSchema struct {
@@ -316,7 +316,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.GetDailyCoins(childComplexity), true
+		args, err := ec.field_Query_getDailyCoins_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetDailyCoins(childComplexity, args["input"].(model.InputGetDailyCoins)), true
 
 	case "Query.getTask":
 		if e.complexity.Query.GetTask == nil {
@@ -646,6 +651,7 @@ input AddTaskInput {
 input GetTasksFilter {
   status: Int
   daily: Boolean
+  timezoneOffset: Int
 }
 
 input EditTaskInput {
@@ -688,6 +694,10 @@ extend type Mutation {
   updatedAt: Time!
 }
 
+input InputGetDailyCoins {
+  timezoneOffset: Int!
+}
+
 type DailyCoins {
   remainingCoins: Int!
   savedCoins: Int!
@@ -697,7 +707,7 @@ type DailyCoins {
 
 extend type Query {
   getUserInfo: User!
-  getDailyCoins: DailyCoins
+  getDailyCoins(input: InputGetDailyCoins!): DailyCoins
 }
 `, BuiltIn: false},
 }
@@ -872,6 +882,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getDailyCoins_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.InputGetDailyCoins
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNInputGetDailyCoins2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐInputGetDailyCoins(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -1814,9 +1839,16 @@ func (ec *executionContext) _Query_getDailyCoins(ctx context.Context, field grap
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getDailyCoins_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetDailyCoins(rctx)
+		return ec.resolvers.Query().GetDailyCoins(rctx, args["input"].(model.InputGetDailyCoins))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3811,6 +3843,34 @@ func (ec *executionContext) unmarshalInputGetTasksFilter(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
+		case "timezoneOffset":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("timezoneOffset"))
+			it.TimezoneOffset, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputInputGetDailyCoins(ctx context.Context, obj interface{}) (model.InputGetDailyCoins, error) {
+	var it model.InputGetDailyCoins
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "timezoneOffset":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("timezoneOffset"))
+			it.TimezoneOffset, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4614,6 +4674,11 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNInputGetDailyCoins2githubᚗcomᚋfavecodeᚋagecoinᚑcoreᚋgraphᚋmodelᚐInputGetDailyCoins(ctx context.Context, v interface{}) (model.InputGetDailyCoins, error) {
+	res, err := ec.unmarshalInputInputGetDailyCoins(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
