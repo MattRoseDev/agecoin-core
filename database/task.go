@@ -34,7 +34,13 @@ func (c *Task) GetTasksByUserId(userId string, filter *model.GetTasksFilter) ([]
 		}
 
 		if filter.Daily != nil && *filter.Daily == bool(true) {
-			query.Where("created_at >= ?", time.Now().Format("2006-01-02"))
+			if filter.TimezoneOffset != nil {
+				now := time.Now().UTC()
+				start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Duration(*filter.TimezoneOffset) * time.Minute)
+				end := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location()).Add(time.Duration(*filter.TimezoneOffset) * time.Minute)
+
+				query.Where("created_at >= ?", start).Where("created_at <= ?", end)
+			}
 		}
 	}
 
