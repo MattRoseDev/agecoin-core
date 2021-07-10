@@ -43,8 +43,13 @@ type FinishTaskInput struct {
 }
 
 type GetTasksFilter struct {
-	Status *int  `json:"status"`
-	Daily  *bool `json:"daily"`
+	Status         *int  `json:"status"`
+	Daily          *bool `json:"daily"`
+	TimezoneOffset *int  `json:"timezoneOffset"`
+}
+
+type InputGetDailyCoins struct {
+	TimezoneOffset int `json:"timezoneOffset"`
 }
 
 type LoginInput struct {

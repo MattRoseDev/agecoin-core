@@ -10,6 +10,10 @@ type User {
   updatedAt: Time!
 }
 
+input InputGetDailyCoins {
+  timezoneOffset: Int!
+}
+
 type DailyCoins {
   remainingCoins: Int!
   savedCoins: Int!
@@ -19,5 +23,5 @@ type DailyCoins {
 
 extend type Query {
   getUserInfo: User!
-  getDailyCoins: DailyCoins
+  getDailyCoins(input: InputGetDailyCoins!): DailyCoins
 }

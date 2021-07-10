@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/favecode/agecoin-core/graph/generated"
 	"github.com/favecode/agecoin-core/graph/model"
@@ -17,8 +16,7 @@ func (r *mutationResolver) Test(ctx context.Context, input model.TestInput) (*mo
 }
 
 func (r *queryResolver) Test(ctx context.Context, input model.TestInput) (*model.Test, error) {
-	fmt.Println(time.Now().Date())
-	return nil, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

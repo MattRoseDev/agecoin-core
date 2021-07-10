@@ -20,6 +20,7 @@ input AddTaskInput {
 input GetTasksFilter {
   status: Int
   daily: Boolean
+  timezoneOffset: Int
 }
 
 input EditTaskInput {
