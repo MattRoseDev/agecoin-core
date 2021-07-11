@@ -34,7 +34,9 @@ func (s *Service) GetDailyCoins(ctx context.Context, input model.InputGetDailyCo
 		savedCoins += t.Coins
 	}
 
-	spentCoins := (time.Now().Hour()*60 + time.Now().Minute()) * 60
+	addedTime := time.Duration(input.TimezoneOffset) * time.Minute
+
+	spentCoins := (time.Now().Add(addedTime).Hour()*60 + time.Now().Add(addedTime).Minute()) * 60
 
 	remainingCoins := (60 * 60 * 24) - spentCoins
 
