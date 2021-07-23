@@ -35,9 +35,9 @@ func (c *Task) GetTasksByUserId(userId string, filter *model.GetTasksFilter) ([]
 
 		if filter.Daily != nil && *filter.Daily == bool(true) {
 			if filter.TimezoneOffset != nil {
-				now := time.Now().UTC()
-				start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Duration(*filter.TimezoneOffset) * time.Minute)
-				end := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location()).Add(time.Duration(*filter.TimezoneOffset) * time.Minute)
+				now := time.Now().UTC().Add(time.Duration(-*filter.TimezoneOffset) * time.Minute)
+				start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+				end := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location())
 
 				query.Where("created_at >= ?", start).Where("created_at <= ?", end)
 			}
